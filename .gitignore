@@ -1,0 +1,43 @@
+# ---------------------
+# Python
+# ---------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.log
+
+# Environnements virtuels
+env/
+venv/
+.venv/
+
+# ---------------------
+# Audio / modèles STT
+# ---------------------
+audio/*.wav
+audio/*.mp3
+tmp_asr/
+vosk-model-small-*
+vosk-model-*
+whisper-tiny/
+whisper-base/
+*.zip
+
+# ---------------------
+# Jupyter / Notebooks
+# ---------------------
+.ipynb_checkpoints/
+
+# ---------------------
+# System / OS files
+# ---------------------
+.DS_Store
+Thumbs.db
+*.swp
+
+# ---------------------
+# Results / logs
+# ---------------------
+results.txt
