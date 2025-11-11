@@ -5,6 +5,11 @@ import json
 import time
 import subprocess
 
+#pour wav2vec2
+import soundfile as sf
+import torch
+import torchaudio
+
 # Fichiers WAV à tester
 FILES = {
     "fr": "audio/test_poeme.wav",
@@ -97,6 +102,42 @@ def run_vosk(wav_file, lang):
         rec.AcceptWaveform(data)
     return json.loads(rec.FinalResult())['text']
 
+
+
+def run_wav2vec2(wav_file, lang="fr"):
+    # Installer transformers si manquant
+    try:
+        from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "transformers"])
+        from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+
+    # Choix du modèle
+    model_name = "facebook/wav2vec2-large-xlsr-53-french" if lang == "fr" else "facebook/wav2vec2-base-960h"
+    processor = Wav2Vec2Processor.from_pretrained(model_name)
+    model = Wav2Vec2ForCTC.from_pretrained(model_name)
+
+    # ---- Lire audio via soundfile ----
+    waveform_np, sample_rate = sf.read(wav_file, dtype='float32')
+    waveform = torch.from_numpy(waveform_np).unsqueeze(0)  # shape [1, n_samples]
+
+    # Resample si nécessaire
+    if sample_rate != 16000:
+        waveform = torchaudio.functional.resample(waveform, sample_rate, 16000)
+
+    # Inférence
+    input_values = processor(waveform.squeeze().numpy(), return_tensors="pt", sampling_rate=16000).input_values
+    start = time.time()
+    with torch.no_grad():
+        logits = model(input_values).logits
+    predicted_ids = torch.argmax(logits, dim=-1)
+    text = processor.batch_decode(predicted_ids)[0]
+    end = time.time()
+    return text, end-start
+
+
+
+
 # ---- SpeechBrain (anglais uniquement) ----
 def run_speechbrain(wav_file):
     try:
@@ -143,6 +184,10 @@ if __name__ == "__main__":
             vosk_text = run_vosk(wav_16, lang)
             vosk_time = time.time() - start
             f.write(f"\n--- Vosk ---\n{vosk_text}\nTime: {vosk_time:.2f}s\n")
+
+            # Wav2Vec2
+            text, t = run_wav2vec2(wav_16, lang)
+            f.write(f"\n--- Wav2Vec2 ({lang}) ---\n{text}\nTime: {t:.2f}s\n")
 
             # SpeechBrain (anglais uniquement)
             if lang == "en":
