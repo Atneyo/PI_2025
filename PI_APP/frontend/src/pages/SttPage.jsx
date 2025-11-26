@@ -1,7 +1,10 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // ← import
 import "./SttPage.css";
 
+
 function SttPage() {
+  const navigate = useNavigate();
   const [model, setModel] = useState("whisper");
   const [audioFiles, setAudioFiles] = useState([]);
   const [textResult, setTextResult] = useState("");
@@ -49,7 +52,13 @@ function SttPage() {
     <div className="container">
   <header className="app-header">
     <h1>Speech-to-Text Demo</h1>
-    <button className="video-button">Vidéo</button>
+    <button
+      className="video-button"
+      onClick={() => navigate("/video")} // ← redirige vers /video
+    >
+      Vidéo
+    </button>
+
   </header>
 
   {/* Zone Drag & Drop */}
