@@ -216,3 +216,24 @@ button:hover {
   list-style-type: none;
   padding-left: 0;
 }
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.video-button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  align-items:flex-end;
+}
+
+.video-button:hover {
+  background-color: #218838;
+}

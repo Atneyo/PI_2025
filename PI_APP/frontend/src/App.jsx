@@ -47,56 +47,61 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Speech-to-Text Demo</h1>
+  <header className="app-header">
+    <h1>Speech-to-Text Demo</h1>
+    <button className="video-button">Vidéo</button>
+  </header>
 
-      {/* Zone Drag & Drop */}
-      <div
-        className="drop-zone"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        <p>Glisser-déposer des fichiers audio ici</p>
-        <button onClick={handleAddFolder}>Ajouter un dossier</button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          webkitdirectory="true"
-          directory=""
-          multiple
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-      </div>
+  {/* Zone Drag & Drop */}
+  <div
+    className="drop-zone"
+    onDrop={handleDrop}
+    onDragOver={handleDragOver}
+  >
+    <p>Glisser-déposer des fichiers audio ici</p>
+    <button onClick={handleAddFolder}>Ajouter un dossier</button>
+    <input
+      type="file"
+      ref={fileInputRef}
+      webkitdirectory="true"
+      directory=""
+      multiple
+      style={{ display: "none" }}
+      onChange={handleFileChange}
+    />
+  </div>
 
-      <label>Choisir un modèle</label>
-      <select value={model} onChange={(e) => setModel(e.target.value)}>
-        <option value="whisper">Whisper</option>
-        <option value="vosk">Vosk</option>
-        <option value="wav2vec2">Wav2Vec2</option>
-      </select>
+  <label>Choisir un modèle</label>
+  <select value={model} onChange={(e) => setModel(e.target.value)}>
+    <option value="whisper">Whisper</option>
+    <option value="vosk">Vosk</option>
+    <option value="wav2vec2">Wav2Vec2</option>
+  </select>
 
-      <button onClick={handleTranscribe}>
-        ▶️ Transcrire (simulation)
-      </button>
+  <button onClick={handleTranscribe}>
+    ▶️ Transcrire (simulation)
+  </button>
 
-      {audioFiles.length > 0 && (
-        <div className="file-list">
-          <h3>Fichiers sélectionnés :</h3>
-          <ul>
-            {audioFiles.map((file, idx) => (
-              <li key={idx}>{file.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {textResult && (
-        <div className="result">
-          <h3>Transcription :</h3>
-          <p>{textResult}</p>
-        </div>
-      )}
+  {audioFiles.length > 0 && (
+    <div className="file-list">
+      <h3>Fichiers sélectionnés :</h3>
+      <ul>
+        {audioFiles.map((file, idx) => (
+          <li key={idx}>{file.name}</li>
+        ))}
+      </ul>
     </div>
+  )}
+
+  {textResult && (
+    <div className="result">
+      <h3>Transcription :</h3>
+      <p>{textResult}</p>
+    </div>
+  )}
+</div>
+
+
   );
 }
 
