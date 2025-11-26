@@ -1,30 +1,72 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 
 function App() {
   const [model, setModel] = useState("whisper");
-  const [audioFile, setAudioFile] = useState(null);
+  const [audioFiles, setAudioFiles] = useState([]);
   const [textResult, setTextResult] = useState("");
 
+  const fileInputRef = useRef(null);
+
+  const handleFiles = (files) => {
+    const fileArray = Array.from(files).filter(file =>
+      file.type.startsWith("audio/")
+    );
+    setAudioFiles((prev) => [...prev, ...fileArray]);
+  };
+
   const handleFileChange = (e) => {
-    setAudioFile(e.target.files[0]);
+    handleFiles(e.target.files);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    handleFiles(e.dataTransfer.files);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleAddFolder = () => {
+    fileInputRef.current.click();
   };
 
   const handleTranscribe = () => {
-    if (!audioFile) {
+    if (audioFiles.length === 0) {
       alert("Sélectionne un fichier audio");
       return;
     }
 
     // Simulation pour l'instant
+    const filenames = audioFiles.map(f => f.name).join(", ");
     setTextResult(
-      `Résultat simulé pour le modèle "${model}" sur le fichier "${audioFile.name}"`
+      `Résultat simulé pour le modèle "${model}" sur les fichiers : ${filenames}`
     );
   };
 
   return (
     <div className="container">
-      <h1>🎤 Speech-to-Text Demo</h1>
+      <h1>Speech-to-Text Demo</h1>
+
+      {/* Zone Drag & Drop */}
+      <div
+        className="drop-zone"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        <p>Glisser-déposer des fichiers audio ici</p>
+        <button onClick={handleAddFolder}>Ajouter un dossier</button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          webkitdirectory="true"
+          directory=""
+          multiple
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+      </div>
 
       <label>Choisir un modèle</label>
       <select value={model} onChange={(e) => setModel(e.target.value)}>
@@ -33,12 +75,20 @@ function App() {
         <option value="wav2vec2">Wav2Vec2</option>
       </select>
 
-      <label>Choisir un fichier audio</label>
-      <input type="file" accept="audio/*" onChange={handleFileChange} />
-
       <button onClick={handleTranscribe}>
         ▶️ Transcrire (simulation)
       </button>
+
+      {audioFiles.length > 0 && (
+        <div className="file-list">
+          <h3>Fichiers sélectionnés :</h3>
+          <ul>
+            {audioFiles.map((file, idx) => (
+              <li key={idx}>{file.name}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {textResult && (
         <div className="result">

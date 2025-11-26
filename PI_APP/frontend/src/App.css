@@ -180,3 +180,39 @@ button:active {
     font-size: 1rem;
   }
 }
+
+.drop-zone {
+  border: 2px dashed #aaa;
+  border-radius: 8px;
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s;
+}
+
+.drop-zone:hover {
+  background-color: #e0f7ff;
+}
+
+.drop-zone p {
+  margin-bottom: 10px;
+}
+
+button {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.file-list ul {
+  list-style-type: none;
+  padding-left: 0;
+}
