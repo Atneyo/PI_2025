@@ -93,7 +93,16 @@ function SttPage() {
 
   {audioFiles.length > 0 && (
     <div className="file-list">
-      <h3>Fichiers sélectionnés :</h3>
+      <div className="file-list-header">
+        <h3>Fichiers sélectionnés :</h3>
+        <button
+          className="clear-files-button"
+          onClick={() => setAudioFiles([])}
+        >
+          Vider
+        </button>
+      </div>
+    
       <ul>
         {audioFiles.map((file, idx) => (
           <li key={idx}>{file.name}</li>

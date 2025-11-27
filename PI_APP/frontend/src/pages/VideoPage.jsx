@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // ← import
+import { useNavigate } from "react-router-dom";
 import "./VideoPage.css";
 
 
@@ -15,7 +15,7 @@ function VideoPage() {
     const fileArray = Array.from(files).filter(file =>
       file.type.startsWith("video/")
     );
-    setAudioFiles((prev) => [...prev, ...fileArray]);
+    setVideoFiles((prev) => [...prev, ...fileArray]);
   };
 
   const handleFileChange = (e) => {
@@ -54,7 +54,7 @@ function VideoPage() {
     <h1>Video Demo</h1>
     <button
       className="stt-button"
-      onClick={() => navigate("/stt")} // ← redirige vers /stt
+      onClick={() => navigate("/stt")} // ← redirect to /stt
     >
       STT
     </button>
@@ -92,7 +92,16 @@ function VideoPage() {
 
   {videoFiles.length > 0 && (
     <div className="file-list">
-      <h3>Fichiers sélectionnés :</h3>
+      <div className="file-list-header">
+        <h3>Fichiers sélectionnés :</h3>
+        <button
+          className="clear-files-button"
+          onClick={() => setVideoFiles([])}
+        >
+          Vider
+        </button>
+      </div>
+    
       <ul>
         {videoFiles.map((file, idx) => (
           <li key={idx}>{file.name}</li>
@@ -103,8 +112,8 @@ function VideoPage() {
 
   {videoResult && (
     <div className="result">
-      <h3>Transcription :</h3>
-      <p>{textResult}</p>
+      <h3>Analyse :</h3>
+      <p>{videoResult}</p>
     </div>
   )}
 </div>
