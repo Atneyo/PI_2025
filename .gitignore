@@ -41,3 +41,47 @@ Thumbs.db
 # Results / logs
 # ---------------------
 results.txt
+
+
+# ==========================
+# Ignorer toutes les virtualenv
+# ==========================
+venv/
+.venv/
+env/
+ENV/
+*/venv/
+*/.venv/
+*/env/
+*/ENV/
+
+# Pour les venv avec nom personnalisé (ex : venv_hailo_rpi_examples)
+*venv*/
+*env*/
+
+# ==========================
+# Fichiers Python
+# ==========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+
+# ==========================
+# OS & IDE
+# ==========================
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# ==========================
+# Environnements
+# ==========================
+*.env
+.env*

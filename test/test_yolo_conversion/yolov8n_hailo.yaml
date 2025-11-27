@@ -1,0 +1,14 @@
+network:
+  path: yolov8n.onnx
+  sensors:
+    input0:
+      shape: [1, 3, 640, 640]
+      format: nhwc
+      dtype: float32
+
+postprocess:
+  type: yolov8
+  confidence_threshold: 0.25
+  iou_threshold: 0.45
+
+hw_arch: hailo8
