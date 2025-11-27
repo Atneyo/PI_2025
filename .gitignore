@@ -46,6 +46,7 @@ results.txt
 # ==========================
 # Ignorer toutes les virtualenv
 # ==========================
+test/hailo_yolo11/venv_hailo_rpi_examples
 venv/
 .venv/
 env/
