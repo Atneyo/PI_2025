@@ -6,9 +6,9 @@ function HomePage() {
 
   return (
     <div className="home-container">
-      <h1>Bienvenue</h1>
+      <h1>Welcome</h1>
       <div className="home-buttons">
-        <button onClick={() => navigate("/video")}>Vidéo</button>
+        <button onClick={() => navigate("/video")}>Video</button>
         <button onClick={() => navigate("/stt")}>Speech-to-Text</button>
       </div>
     </div>

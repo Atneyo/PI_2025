@@ -6,16 +6,16 @@ function VideoPage() {
   const navigate = useNavigate();
   const [model, setModel] = useState("YOLOv11");
   const [videoFiles, setVideoFiles] = useState([]);
-  const [videoResult, setVideoResult] = useState("");
+  const [analysisResult, setAnalysisResult] = useState("");
   const [selectedVideoURL, setSelectedVideoURL] = useState(null);
 
   const fileInputRef = useRef(null);
 
   const handleFiles = (files) => {
-    const fileArray = Array.from(files).filter(file =>
+    const filteredFiles = Array.from(files).filter(file =>
       file.type.startsWith("video/")
     );
-    setVideoFiles((prev) => [...prev, ...fileArray]);
+    setVideoFiles((prev) => [...prev, ...filteredFiles]);
   };
 
   const handleFileChange = (e) => {
@@ -35,25 +35,24 @@ function VideoPage() {
     fileInputRef.current.click();
   };
 
-  const handleTranscribe = () => {
+  const handleAnalyze = () => {
     if (videoFiles.length === 0) {
-      alert("Sélectionne un fichier vidéo");
+      alert("Please select a video file");
       return;
     }
 
-    // ▶️ On prend la première vidéo pour l’afficher
+    // ▶️ Preview the first video
     const videoURL = URL.createObjectURL(videoFiles[0]);
     setSelectedVideoURL(videoURL);
 
     const filenames = videoFiles.map(f => f.name).join(", ");
-    setVideoResult(
-      `Résultat simulé pour le modèle "${model}" sur les fichiers : ${filenames}`
+    setAnalysisResult(
+      `Simulated result for the model "${model}" on files: ${filenames}`
     );
   };
 
   return (
     <div className="container">
-
       {/* --- HEADER --- */}
       <header className="app-header">
         <h1>Video Demo</h1>
@@ -62,14 +61,14 @@ function VideoPage() {
         </button>
       </header>
 
-      {/* --- ZONE DRAG & DROP --- */}
+      {/* --- DRAG & DROP ZONE --- */}
       <div
         className="drop-zone"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
-        <p>Glisser-déposer des fichiers vidéos ici</p>
-        <button onClick={handleAddFolder}>Ajouter un dossier</button>
+        <p>Drag and drop video files here</p>
+        <button onClick={handleAddFolder}>Add Folder</button>
         <input
           type="file"
           ref={fileInputRef}
@@ -83,28 +82,28 @@ function VideoPage() {
       </div>
 
       {/* --- SELECT MODEL --- */}
-      <label>Choisir un modèle</label>
+      <label>Select a model</label>
       <select value={model} onChange={(e) => setModel(e.target.value)}>
         <option value="YOLOv11">YOLO v11</option>
         <option value="YOLOv8">YOLO v8</option>
       </select>
 
-      <button onClick={handleTranscribe}>▶️ Analyser (simulation)</button>
+      <button onClick={handleAnalyze}>▶️ Analyze (simulation)</button>
 
-      {/* --- LISTE DES FICHIERS + BOUTON CLEAR --- */}
+      {/* --- FILE LIST + CLEAR BUTTON --- */}
       {videoFiles.length > 0 && (
         <div className="file-list">
           <div className="file-list-header">
-            <h3>Fichiers sélectionnés :</h3>
+            <h3>Selected files:</h3>
             <button
               className="clear-files-button"
               onClick={() => {
                 setVideoFiles([]);
                 setSelectedVideoURL(null);
-                setVideoResult("");
+                setAnalysisResult("");
               }}
             >
-              Vider
+              Clear
             </button>
           </div>
 
@@ -116,10 +115,10 @@ function VideoPage() {
         </div>
       )}
 
-      {/* --- LECTEUR VIDÉO --- */}
+      {/* --- VIDEO PREVIEW --- */}
       {selectedVideoURL && (
         <div className="video-preview">
-          <h3>Aperçu vidéo :</h3>
+          <h3>Video Preview:</h3>
           <video
             src={selectedVideoURL}
             controls
@@ -130,11 +129,11 @@ function VideoPage() {
         </div>
       )}
 
-      {/* --- RÉSULTAT --- */}
-      {videoResult && (
+      {/* --- RESULT --- */}
+      {analysisResult && (
         <div className="result">
-          <h3>Analyse :</h3>
-          <p>{videoResult}</p>
+          <h3>Analysis:</h3>
+          <p>{analysisResult}</p>
         </div>
       )}
     </div>
