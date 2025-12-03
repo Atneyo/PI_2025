@@ -1,9 +1,24 @@
-# Projet Industriel 2025-2026
+# Industrial Project (2025-2026)
 
-## Application
+## Project Overview
 
-Le développement de l'application se fait dans le dossier ```PI_APP/```, voir ```README.md``` dans ce dossier pour plus d'informations.
+This project studies different artificial intelligence models for computer vision and Speech-to-Text on audio and video files. The models will be run on a Raspberry Pi 5, allowing performance comparison, with and without the AI accelerator (Hailo AI HAT), and will include a human-machine interface for result visualization.
 
-## Tests de modèles
+## Project Goals
 
-Le dossier ```demo_modeles/``` contient les scripts permettant de tester les différents modèles sur Linux et Raspberry Pi ainsi que les fichiers audio testés dans le dossier ```audio/```. Le fichier ```big_test.py``` permet de lancer tous les modèles testés sur un audio en anglais et sur un audio en français et créé dans le même répertoire un fichier ```results.txt``` qui permet de visualiser les résultats obtenus (transcription et temps).
+The objectives of this project are:
+
+* Use various AI models to detect objects in videos, either in real-time or in imported videos
+* Use various AI models to convert audio to text (Speech-to-Text) from video and audio files, either in real-time or from imported files
+* Run the models on a Raspberry Pi 5
+* Develop a human-machine interface allowing the selection of different test parameters (model used, number of fps, choice of a specific temporal study zone in a video, with or without the accelerator) and videos (real-time camera usage or drag-and-drop video import) and display the results
+* Compare the different models used, with and without the Hailo AI HAT accelerator
+* Provide a single-command, offline executable application
+
+## Project Structure
+
+## Installation Instructions
+
+## Launch
+(specify how to launch each component / provide a link to the corresponding README)
+
