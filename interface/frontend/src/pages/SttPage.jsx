@@ -66,12 +66,10 @@ function SttPage() {
         onDragOver={handleDragOver}
       >
         <p>Drag and drop audio files here</p>
-        <button onClick={handleAddFolder}>Add Folder</button>
+        <button onClick={handleAddFolder}>Add Files</button>
         <input
           type="file"
           ref={fileInputRef}
-          webkitdirectory="true"
-          directory=""
           multiple
           style={{ display: "none" }}
           onChange={handleFileChange}
