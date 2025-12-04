@@ -17,6 +17,33 @@ The objectives of this project are:
 
 ## Project Structure
 
+```text
+/
+├── README.md                       # Main project README
+│
+├── interface/
+│   ├── README.md
+│   ├── frontend/                   # User interface
+│   │   ├── src/                    # Frontend source code
+│   │   │   ├── pages/              # Full pages (route-level views)
+│   │   │   └── components/         # Reusable UI components
+│   │
+│   └── backend/                    # Backend connecting the interface with the models
+│
+├── models/                         # AI Models (CV and STT)
+│   ├── README.md
+│   ├── computer_vision/            # Object detection models
+│   └── speech_to_text/             # Speech-to-Text models
+│
+├── monitoring/                     # Monitoring and performance metrics
+│   ├── README.md
+│
+├── tests/                          # Tests and research experiments
+│   ├── README.md
+│
+└── docs/                           # Additional documentation, diagrams, notes
+```
+
 ## Installation Instructions
 
 ## Launch
