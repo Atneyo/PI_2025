@@ -68,12 +68,10 @@ function VideoPage() {
         onDragOver={handleDragOver}
       >
         <p>Drag and drop video files here</p>
-        <button onClick={handleAddFolder}>Add Folder</button>
+        <button onClick={handleAddFolder}>Add Files</button>
         <input
           type="file"
           ref={fileInputRef}
-          webkitdirectory="true"
-          directory=""
           multiple
           accept="video/*"
           style={{ display: "none" }}
