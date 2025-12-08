@@ -36,10 +36,13 @@ The objectives of this project are:
 │   └── speech_to_text/             # Speech-to-Text models
 │
 ├── monitoring/                     # Monitoring and performance metrics
-│   ├── README.md
+│   └── README.md
+│
+├── scripts/                        # Raspeberry Pi installation
+│   └── README.md
 │
 ├── tests/                          # Tests and research experiments
-│   ├── README.md
+│   └── README.md
 │
 └── docs/                           # Additional documentation, diagrams, notes
 ```
