@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./VideoPage.css";
+import { analyzeVideo } from "../api/api";
 
 function VideoPage() {
   const navigate = useNavigate();
@@ -35,20 +36,19 @@ function VideoPage() {
     fileInputRef.current.click();
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (videoFiles.length === 0) {
       alert("Please select a video file");
       return;
     }
 
-    // ▶️ Preview the first video
-    const videoURL = URL.createObjectURL(videoFiles[0]);
-    setSelectedVideoURL(videoURL);
-
-    const filenames = videoFiles.map(f => f.name).join(", ");
-    setAnalysisResult(
-      `Simulated result for the model "${model}" on files: ${filenames}`
-    );
+    // Print result video
+    try {
+      const data = await analyzeVideo(videoFiles); // call backend (see api.jsx)
+      setSelectedVideoURL(data);
+    } catch (err) {
+      console.error("Error during analyze :",err);
+    }
   };
 
   return (
