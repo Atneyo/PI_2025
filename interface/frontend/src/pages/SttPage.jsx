@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SttPage.css";
+import { uploadFiles } from "../api/api";
 
 function SttPage() {
   const navigate = useNavigate();
@@ -34,17 +35,18 @@ function SttPage() {
     fileInputRef.current.click();
   };
 
-  const handleTranscribe = () => {
+  const handleTranscribe = async () => {
     if (audioFiles.length === 0) {
       alert("Please select an audio file");
       return;
     }
 
-    // Simulation for now
-    const filenames = audioFiles.map(f => f.name).join(", ");
-    setTranscriptionResult(
-      `Simulated result for the model "${model}" on files: ${filenames}`
-    );
+    try {
+      const data = await uploadFiles(audioFiles); // call backend (see api.jsx)
+      setTranscriptionResult(data);
+    } catch (err) {
+      console.error("Error during trnascription :",err);
+    }
   };
 
   return (
