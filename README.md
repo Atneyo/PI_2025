@@ -25,10 +25,15 @@ The objectives of this project are:
 │   ├── README.md
 │   ├── frontend/                   # User interface
 │   │   ├── src/                    # Frontend source code
-│   │   │   ├── pages/              # Full pages (route-level views)
-│   │   │   └── components/         # Reusable UI components
-│   │
+│   │   │   ├── api/                # API calls to backend
+|   |   |   ├── assets/             # Images, icons, fonts, etc.
+|   |   |   ├── components/         # Reusable UI components 
+│   │   │   └── pages/              # Full pages (route-level views)
+|   |   ├── App.jsx                 # Main React component with routes
+│   │   └── index.jsx               # Entry point
+|   |
 │   └── backend/                    # Backend connecting the interface with the models
+|       └── main.py                 # FastAPI app
 │
 ├── models/                         # AI Models (CV and STT)
 │   ├── README.md
