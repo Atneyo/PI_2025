@@ -7,6 +7,7 @@ This repository contains scripts for monitoring various aspects of a Raspberry P
 Currently supported monitoring types:
 
 * **Temperature monitoring**
+* **Memory monitoring**
 
 Each file provides functions that can be used to monitor different metrics on the Raspberry Pi.
 
