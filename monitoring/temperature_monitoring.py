@@ -2,10 +2,19 @@ import json
 import time
 import datetime
 import os
+import glob
+import statistics
+import logging
+
+#ensure psutil name exists even if import fails
+psutil = None
 try:
-    import psutil
-except ImportError:
-    pass
+    import psutil as _psutil
+    psutil = _psutil
+except Exception:
+    psutil = None
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 
 #checking if the device the monitoring is used on is an rpi5
 def is_raspberry_pi():
@@ -25,7 +34,7 @@ def is_raspberry_pi():
 
     return False
 
-#Boolean ariable initialisation (for hailo presence)
+#Boolean variable initialisation (for hailo presence)
 try:
     from hailort import Device
     HAILO = True
@@ -34,27 +43,86 @@ except ImportError:
 
 file = "temp_stats.json"
 
-#Function 
+#simple validation params  can be modified as needed
+_TEMP_MIN = -20.0
+_TEMP_MAX = 125.0
+_SENTINELS = {0, -1, 32768, 85, 255, 65535}
+
+#Function to get cpu temperature
+def _read_temp(path):
+    try:
+        with open(path, 'r') as f:
+            raw = f.read().strip()
+        if not raw:
+            return None
+        v = float(raw)
+        #convert millidegree values (common) to °C
+        if abs(v) > 1000:
+            v = v / 1000.0
+        return v
+    except Exception:
+        return None
+
+
+def _valid_temp(v):
+    try:
+        if v is None:
+            return False
+        if int(v) in _SENTINELS:
+            return False
+        return _TEMP_MIN <= float(v) <= _TEMP_MAX
+    except Exception:
+        return False
+
+
 def get_cpu_temp():
-    pi_temp_path = "/sys/class/thermal/thermal/zone0/temp"
-    if os.path.exists(pi_temp_path):
-        try:
-            with open(pi_temp_path, "r") as f:
-                return int(f.read().strip()) / 1000.0
-        except:
+    """Minimal robust CPU temp: scan sysfs, normalize, validate, small retry, fallback to psutil."""
+    temps = []
+    #check temperature multiple times to avoid momentary read glitches
+    for _ in range(2):
+        for p in sorted(glob.glob('/sys/class/thermal/thermal_zone*/temp')):
+            v = _read_temp(p)
+            if _valid_temp(v):
+                temps.append(v)
+        if temps:
+            #use first temps found
+            break
+        time.sleep(0.05)
+
+    #fallback to hwmon style paths (if nothing is found in the thermal_zone paths)
+    if not temps:
+        for p in sorted(glob.glob('/sys/class/thermal/*/hwmon*/temp*_input')):
+            v = _read_temp(p)
+            if _valid_temp(v):
+                temps.append(v)
+        if temps:
+            #use first hwmon readings
             pass
 
-    if not is_raspberry_pi():
+    #fallback to psutil if nothing found
+    if not temps and psutil is not None:
         try:
-            temps = psutil.sensors_temperatures()
-            for name, entries in temps.items():
-                if entries:
-                    return entries[0].current
-        except:
+            pts = psutil.sensors_temperatures()
+            for name, entries in pts.items():
+                for e in entries:
+                    try:
+                        v = float(e.current)
+                        if _valid_temp(v):
+                            temps.append(v)
+                    except Exception:
+                        continue
+        except Exception:
             pass
 
-    return None
+    if not temps:
+        logging.warning('No valid temperature readings found')
+        return None
 
+    med = statistics.median(temps)
+    logging.info('Temperature candidates=%s median=%.2f°C', temps, med)
+    return round(med, 2)
+
+#Function to get the Hailo hat temperature 
 def get_hailo_temperature():
     if not HAILO:
         return None
@@ -65,6 +133,7 @@ def get_hailo_temperature():
     except:
         return None
 
+#Function to write the temperature in a JSON file for the temperature function specifically
 def write_stats():
     data = {
         "timestamp": datetime.datetime.now().isoformat(),
