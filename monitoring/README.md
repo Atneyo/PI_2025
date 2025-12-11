@@ -8,6 +8,8 @@ Currently supported monitoring types:
 
 * **Temperature monitoring**
 * **Memory monitoring**
+* **Camera detection**
+* **Hailo detection**
 
 Each file provides functions that can be used to monitor different metrics on the Raspberry Pi.
 
