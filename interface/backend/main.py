@@ -2,6 +2,7 @@ from typing import Annotated
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from models.speech_to_text.transcription import transcribe
 import os
 
 app = FastAPI()
@@ -18,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
+app.mount("/outputs", StaticFiles(directory="interface/backend/outputs"), name="outputs")
 
 # return video result url and global statistics
 @app.post("/analyze-video/")
@@ -69,13 +70,13 @@ async def analyze_audio(files: list[UploadFile]):
         f.write(await audio.read())
 
     # call Whisper on audio_path
-    
+    audio_result = transcribe(audio_path)
 
     # delete input file to save memory
     os.remove(audio_path)
     
     
-    return  {"text": "test", "stats": {}}
+    return  {"text": audio_result, "stats": {}}
 
 # return current statistics from current detection, null if no detection
 @app.get("/statistics/video/")
