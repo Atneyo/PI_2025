@@ -1,5 +1,6 @@
 import pyudev
 import subprocess
+import shutil
 
 def list_usb_cameras():
     context = pyudev.Context()
@@ -18,16 +19,17 @@ def list_usb_cameras():
 
 def list_rpi_cameras():
     cameras = []
-    try:
-        result = subprocess.run(['vcgencmd', 'get_camera'], capture_output=True, text=True)
-        output = result.stdout.strip()
-        if 'supported=1' in output and 'detected=1' in output:
-            cameras.append({
-                "device_node": "/dev/video0",
-                "name": "Raspberry Pi Camera"
-            })
-    except FileNotFoundError:
-        pass
+    if shutil.which('rpicam-hello'):
+        try:
+            result = subprocess.run(['rpicam-hello', '--list_cameras'], capture_output=True, text=True, timeout=3)
+            out = (result.stdout + result.stderr).lower()
+            if result.returncode == 0 or any(k in out for k in ('camera', 'found', 'detected')):
+                cameras.append({"device_node":"/dev/vidoe0", "name":"Raspberry Pi Camera"})
+                return cameras
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            pass
+        except FileNotFoundError:
+            pass
 
     return cameras
 
