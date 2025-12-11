@@ -2,11 +2,12 @@ from typing import Annotated
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+import os
 
 app = FastAPI()
 
 
-RESULT_PATH = "result.webm"
+VIDEO_RESULT_PATH = "result.webm"
 
 # Autorise all origins so frontend can call backend (maybe change origin to ["http://localhost:3000"] to increase security)
 app.add_middleware(
@@ -19,6 +20,7 @@ app.add_middleware(
 
 app.mount("/outputs", StaticFiles(directory="outputs"), name="outputs")
 
+# return video result url and global statistics
 @app.post("/analyze-video/")
 async def analyze_video(files: list[UploadFile]):
     
@@ -34,7 +36,44 @@ async def analyze_video(files: list[UploadFile]):
 
     # call YOLO on video_path
     
+
     
-    video_url = f"http://127.0.0.1:8000/outputs/{RESULT_PATH}"
+    video_url = f"http://127.0.0.1:8000/outputs/{VIDEO_RESULT_PATH}"
     
-    return  video_url
+    return  {"video": video_url, "stats": {}}
+
+# return transcription and global statistics
+@app.post("/analyze-audio/")
+async def analyze_audio(files: list[UploadFile]):
+    
+    if not files:
+        return {"error": "No audio provided"}
+    
+    audio = files[0]
+    audio_path = f"uploads/{audio.filename}" # save audio at this path
+    
+    # save file
+    with open(audio_path, "wb") as f:
+        f.write(await audio.read())
+
+    # call Whisper on audio_path
+    
+
+    
+    
+    return  {"text": "", "stats": {}}
+
+# return current statistics from current detection, null if no detection
+@app.get("/statistics/video/")
+async def get_video_statistics():
+    pass
+
+# return current statistics from current transcription, null if no transcription
+@app.get("/statistics/audio/")
+async def get_audio_statistics():
+    pass
+
+# return monitoring information
+@app.get("/monitoring/")
+async def get_monitoring():
+    pass
