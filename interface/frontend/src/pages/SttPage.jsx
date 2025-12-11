@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SttPage.css";
+import { analyzeAudio } from "../api/api";
 
 function SttPage() {
   const navigate = useNavigate();
@@ -34,17 +35,20 @@ function SttPage() {
     fileInputRef.current.click();
   };
 
-  const handleTranscribe = () => {
+  const handleTranscribe = async () => {
     if (audioFiles.length === 0) {
       alert("Please select an audio file");
       return;
     }
 
-    // Simulation for now
-    const filenames = audioFiles.map(f => f.name).join(", ");
-    setTranscriptionResult(
-      `Simulated result for the model "${model}" on files: ${filenames}`
-    );
+    // print transcription
+    try {
+      const data = await analyzeAudio(audioFiles); // call backend (see api.jsx)
+      setTranscriptionResult(data["text"]);
+    } catch (err) {
+      console.error("Error during transcription :",err);
+    }
+
   };
 
   return (

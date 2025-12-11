@@ -1,4 +1,4 @@
-# Étape de build
+# Build step
 FROM node:20-alpine AS build
 
 WORKDIR /app
@@ -7,11 +7,11 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Étape de production
+# Production step
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Exposer le port nginx
+# Expose nginx port
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

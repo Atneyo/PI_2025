@@ -10,6 +10,19 @@ npm install
 npm run dev
 ```
 
+## Backend Installation and Launch
+
+Requirements :
+```
+pip install requirements.txt
+```
+
+From the root of the application:
+```
+cd backend
+uvicorn main:app --reload
+```
+
 ### Using Docker
 
 From the root of the application:

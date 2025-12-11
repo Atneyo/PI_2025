@@ -1,17 +1,17 @@
 version: "3.9"
 services:
-  # backend:
-  #   build: ./backend
-  #   container_name: my-backend
-  #   ports:
-  #     - "8000:8000"
-  #   restart: unless-stopped
+  backend:
+    build: ./backend
+    container_name: my-backend
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
 
   frontend:
     build: ./frontend
     container_name: my-frontend
     ports:
       - "3000:80"
-    # depends_on:
-    #   - backend
+    depends_on:
+      - backend
     restart: unless-stopped

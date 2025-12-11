@@ -1,20 +1,20 @@
-# Utiliser une image Python légère
+# Slim version of python
 FROM python:3.12-slim
 
-# Définir le répertoire de travail
+# Set work directory
 WORKDIR /app
 
-# Copier les fichiers requirements
+# Copy requirements file
 COPY requirements.txt .
 
-# Installer les dépendances
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier le reste du code
+# Copy all code
 COPY . .
 
-# Exposer le port (ex: FastAPI par défaut)
+# Expose port (FastAPI)
 EXPOSE 8000
 
-# Commande pour lancer l'app (FastAPI en uvicorn)
+# Run app (FastAPI with uvicorn)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
