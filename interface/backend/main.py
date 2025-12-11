@@ -37,6 +37,8 @@ async def analyze_video(files: list[UploadFile]):
     # call YOLO on video_path
     
 
+    # delete input file to save memory
+    os.remove(video_path)
     
     video_url = f"http://127.0.0.1:8000/outputs/{VIDEO_RESULT_PATH}"
     
@@ -59,6 +61,8 @@ async def analyze_audio(files: list[UploadFile]):
     # call Whisper on audio_path
     
 
+    # delete input file to save memory
+    os.remove(audio_path)
     
     
     return  {"text": "", "stats": {}}
