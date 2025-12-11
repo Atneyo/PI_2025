@@ -27,6 +27,11 @@ async def analyze_video(files: list[UploadFile]):
     if not files:
         return {"error": "No video provided"}
     
+    # check if uploads and outputs folders exist
+    os.makedirs("uploads",exist_ok=True)
+    os.makedirs("outputs",exist_ok=True)
+    
+
     video = files[0]
     video_path = f"uploads/{video.filename}" # save video at this path
     
@@ -51,9 +56,14 @@ async def analyze_audio(files: list[UploadFile]):
     if not files:
         return {"error": "No audio provided"}
     
+    # check if uploads and outputs folders exist
+    os.makedirs("uploads",exist_ok=True)
+    os.makedirs("outputs",exist_ok=True)
+    
+
     audio = files[0]
     audio_path = f"uploads/{audio.filename}" # save audio at this path
-    
+
     # save file
     with open(audio_path, "wb") as f:
         f.write(await audio.read())
