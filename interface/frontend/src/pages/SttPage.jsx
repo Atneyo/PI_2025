@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./SttPage.css";
-// import { uploadFiles } from "../api/api";
+import { analyzeAudio } from "../api/api";
 
 function SttPage() {
   const navigate = useNavigate();
@@ -41,13 +41,14 @@ function SttPage() {
       return;
     }
 
-    // try {
-    //   const data = await uploadFiles(audioFiles); // call backend (see api.jsx)
-    //   setTranscriptionResult(data);
-    // } catch (err) {
-    //   console.error("Error during transcription :",err);
-    // }
-    setTranscriptionResult("Simulation");
+    // print transcription
+    try {
+      const data = await analyzeAudio(audioFiles); // call backend (see api.jsx)
+      setTranscriptionResult(data["text"]);
+    } catch (err) {
+      console.error("Error during transcription :",err);
+    }
+
   };
 
   return (

@@ -45,7 +45,7 @@ function VideoPage() {
     // Print result video
     try {
       const data = await analyzeVideo(videoFiles); // call backend (see api.jsx)
-      setSelectedVideoURL(data);
+      setSelectedVideoURL(data["video"]);
     } catch (err) {
       console.error("Error during analyze :",err);
     }

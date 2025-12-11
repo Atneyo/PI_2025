@@ -65,7 +65,7 @@ async def analyze_audio(files: list[UploadFile]):
     os.remove(audio_path)
     
     
-    return  {"text": "", "stats": {}}
+    return  {"text": "test", "stats": {}}
 
 # return current statistics from current detection, null if no detection
 @app.get("/statistics/video/")
