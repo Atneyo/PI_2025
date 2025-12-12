@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  backend:
+    build: 
+      context: ./
+      dockerfile: ./interface/backend/Dockerfile
+    container_name: backend
+    ports:
+      - "8000:8000"
+    # volumes: # le container utilise les fichiers locaux directement (pas besoin de reconstruire l'image quand on fait des modifications)
+    #   - ./interface/backend:/app # dossier_local:dossier_container
+    # problem with import of models
+
+  frontend:
+    build: ./interface/frontend
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./interface/frontend:/app
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8000
+    depends_on:
+      - backend

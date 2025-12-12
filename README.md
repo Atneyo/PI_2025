@@ -57,3 +57,13 @@ The objectives of this project are:
 ## Launch
 (specify how to launch each component / provide a link to the corresponding README)
 
+To lauch the application:
+```
+docker-compose up --build
+# without --build Docker uses images already build
+```
+To clean up:
+```
+docker-compose down -v
+docker rmi backend-image:latest frontend-image:latest
+```
