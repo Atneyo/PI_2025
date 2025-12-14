@@ -60,8 +60,14 @@ The objectives of this project are:
 To lauch the application:
 ```
 docker-compose up --build
-# without --build Docker uses images already build
+# without --build Docker uses images already built
 ```
+
+The app is available at:
+```
+http://localhost:5173/
+```
+
 To clean up:
 ```
 docker-compose down -v
