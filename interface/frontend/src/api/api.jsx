@@ -1,3 +1,5 @@
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export async function analyzeVideo(files) {
   const formData = new FormData();
 
@@ -5,7 +7,7 @@ export async function analyzeVideo(files) {
     formData.append("files", files[i]);
   }
 
-  const response = await fetch("http://127.0.0.1:8000/analyze-video/", {
+  const response = await fetch(`${BACKEND_URL}/analyze-video/`, {
     method: "POST",
     body: formData,
   });
@@ -18,13 +20,15 @@ export async function analyzeVideo(files) {
 }
 
 export async function analyzeAudio(files) {
+  console.log(BACKEND_URL)
+
   const formData = new FormData();
 
   for (let i = 0; i < files.length; i++) {
     formData.append("files", files[i]);
   }
 
-  const response = await fetch("http://127.0.0.1:8000/analyze-audio/", {
+  const response = await fetch(`${BACKEND_URL}/analyze-audio/`, {
     method: "POST",
     body: formData,
   });

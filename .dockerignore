@@ -1,0 +1,24 @@
+# Fichiers et dossiers inutiles
+**/__pycache__/
+*.pyc
+*.log
+.env
+notebooks/
+tests/
+docs/
+scripts/
+interface/frontend/node_modules/
+**/*.wav
+**/*.mp4
+**/*.webm
+**/uploads/
+**/env/
+**/venv/
+screen/
+README_docker.md
+README_merge_request.md
+README.md
+TODO.md
+**/.gitignore
+demo_modeles
+**/README.md

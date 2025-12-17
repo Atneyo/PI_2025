@@ -2,10 +2,10 @@
 
 ## Frontend Installation and Launch
 
-From the root of the application:
+From the root of the repo:
 
 ```
-cd frontend
+cd interface/frontend
 npm install
 npm run dev
 ```
@@ -17,30 +17,27 @@ Requirements :
 pip install requirements.txt
 ```
 
-From the root of the application:
+From the root of the repo:
 ```
-cd backend
-uvicorn main:app --reload
+uvicorn interface.backend.main:app --reload
 ```
 
 ### Using Docker
 
-From the root of the application:
-
+Launch the application from the root of the repo:
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 The app is available at:
-
 ```
-http://localhost:3000/
+http://localhost:5173/
 ```
 
-To stop Docker:
-
+To clean up:
 ```
-docker-compose down
+docker-compose down -v
+docker rmi backend-image:latest frontend-image:latest
 ```
 
 ## File types supported by the application
