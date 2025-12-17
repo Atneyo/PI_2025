@@ -15,6 +15,14 @@ The objectives of this project are:
 * Compare the different models used, with and without the Hailo AI HAT accelerator
 * Provide a single-command, offline executable application
 
+## Project Architecture
+
+**C4 Diagram Level 1 (System Context):**
+![C4 Diagram Level 1 (System Context)](pictures/C4_level1.png)
+
+**C4 Diagram Level 2 (Container):**
+![C4 Diagram Level 2 (Container)](pictures/C4_level2.png)
+
 ## Project Structure
 
 ```text
