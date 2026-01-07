@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from models.speech_to_text.transcription import transcribe
 import os
+from interface.backend.AI.yolo_detection import yolo_detection
 
 app = FastAPI()
 
@@ -41,14 +42,21 @@ async def analyze_video(files: list[UploadFile]):
         f.write(await video.read())
 
     # call YOLO on video_path
-    
+    recorded_path = yolo_detection(
+        live_input=False,
+        video_path=video_path,
+        frame_rate=15,
+        output_dir="interface/backend/outputs",
+        record_filename=VIDEO_RESULT_PATH,
+        hef_path="interface/backend/AI/yolov11n.hef",
+    )
 
     # delete input file to save memory
     os.remove(video_path)
     
     video_url = f"http://127.0.0.1:8000/outputs/{VIDEO_RESULT_PATH}"
     
-    return  {"video": video_url, "stats": {}}
+    return  {"video": video_url, "recording_path": str(recorded_path), "stats": {}}
 
 # return transcription and global statistics
 @app.post("/analyze-audio/")
