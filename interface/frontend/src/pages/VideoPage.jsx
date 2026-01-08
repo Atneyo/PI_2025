@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./VideoPage.css";
 import { analyzeVideo } from "../api/api";
 
 function VideoPage() {

@@ -1,7 +1,9 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./SttPage.css";
 import { analyzeAudio } from "../api/api";
+import Parameters from "../components/Parameters";
+import Monitoring from "../components/Monitoring";
+import Statistics from "../components/Statistics";
 
 function SttPage() {
   const navigate = useNavigate();
@@ -52,71 +54,84 @@ function SttPage() {
   };
 
   return (
-    <div className="container">
-      <header className="app-header">
-        <h1>Speech-to-Text Demo</h1>
-        <button
-          className="video-button"
-          onClick={() => navigate("/video")} // redirect to /video
-        >
-          Video
-        </button>
-      </header>
-
-      {/* Drag & Drop Zone */}
-      <div
-        className="drop-zone"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
-        <p>Drag and drop audio files here</p>
-        <button onClick={handleAddFolder}>Add Files</button>
-        <input
-          type="file"
-          ref={fileInputRef}
-          multiple
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-      </div>
-
-      <label>Select a model</label>
-      <select value={model} onChange={(e) => setModel(e.target.value)}>
-        <option value="whisper">Whisper</option>
-        <option value="vosk">Vosk</option>
-        <option value="wav2vec2">Wav2Vec2</option>
-      </select>
-
-      <button onClick={handleTranscribe}>
-        ▶️ Transcribe (simulation)
-      </button>
-
-      {audioFiles.length > 0 && (
-        <div className="file-list">
-          <div className="file-list-header">
-            <h3>Selected files:</h3>
+    <div className="page-layout">
+      {/* Left part */}
+      <div className="left-panel">
+        <div className="container">
+          <header className="app-header">
+            <h1>Speech-to-Text Demo</h1>
             <button
-              className="clear-files-button"
-              onClick={() => setAudioFiles([])}
+              className="video-button"
+              onClick={() => navigate("/video")} // redirect to /video
             >
-              Clear
+              Video
             </button>
+          </header>
+
+          {/* Drag & Drop Zone */}
+          <div
+            className="drop-zone"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
+            <p>Drag and drop audio files here</p>
+            <button onClick={handleAddFolder}>Add Files</button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              multiple
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
           </div>
 
-          <ul>
-            {audioFiles.map((file, idx) => (
-              <li key={idx}>{file.name}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+          <label>Select a model</label>
+          <select value={model} onChange={(e) => setModel(e.target.value)}>
+            <option value="whisper">Whisper</option>
+            <option value="vosk">Vosk</option>
+            <option value="wav2vec2">Wav2Vec2</option>
+          </select>
 
-      {transcriptionResult && (
-        <div className="result">
-          <h3>Transcription:</h3>
-          <p>{transcriptionResult}</p>
+          <button onClick={handleTranscribe}>
+            ▶️ Transcribe (simulation)
+          </button>
+
+          {audioFiles.length > 0 && (
+            <div className="file-list">
+              <div className="file-list-header">
+                <h3>Selected files:</h3>
+                <button
+                  className="clear-files-button"
+                  onClick={() => setAudioFiles([])}
+                >
+                  Clear
+                </button>
+              </div>
+          
+              <ul>
+                {audioFiles.map((file, idx) => (
+                  <li key={idx}>{file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {transcriptionResult && (
+            <div className="result">
+              <h3>Transcription:</h3>
+              <p>{transcriptionResult}</p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
+
+      {/* Right part */}
+      <div className="right-panel">
+        <Parameters />
+        <Monitoring/>
+        <Statistics/>
+
+      </div>
     </div>
   );
 }
