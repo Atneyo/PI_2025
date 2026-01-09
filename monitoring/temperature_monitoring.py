@@ -161,7 +161,7 @@ if __name__ == "__main__":
     print(f"Hailo available: {HAILO}")
     while True:
         data = get_temp_info()
-        data_cur = get_data_for_cur_log(data)
+        data_cur = get_temp_data_for_cur_log(data)
         save_to_json(file,data)
         save_cur_stats_json(glob_filename,data_cur)
         time.sleep(5)
