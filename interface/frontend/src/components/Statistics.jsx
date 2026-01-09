@@ -1,5 +1,16 @@
 function Statistics() {
-  return <div>Statistics</div>;
+  const fps = 0;
+  return (
+    <div>
+      <h2>Statistics</h2>
+      <div className="stats-row">
+        {/* Left column */}
+        <div className="column">
+          <p>Treatment: {fps} fps</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Statistics;
