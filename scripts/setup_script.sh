@@ -126,6 +126,7 @@ rustup default stable
 cargo build --release
 cp target/release/joularcore /usr/local/bin/joularcore
 cd ..
+rm -rf joularcore
 
 
 
