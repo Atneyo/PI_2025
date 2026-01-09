@@ -5,6 +5,8 @@ import logging
 
 glob_filename = "current_monitoring_data.json"
 
+glob_interval = 10  #seconds
+
 def save_to_json(filename, data):
     #append atomically to JSON file (entries are stored as a list, creating file if needed))
     try:

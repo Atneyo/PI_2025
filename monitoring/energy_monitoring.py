@@ -72,7 +72,7 @@ def get_energy_info():
         "energy": energy_row
     }
 
-def get_data_for_cur_log(data):
+def get_energy_data_for_cur_log(data):
     data_part ={
         "timestamp" : datetime.datetime.now().isoformat(),
         "energy": {
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     try:
         while True:
             energy_info = get_energy_info()
-            cur_energy_info = get_data_for_cur_log(energy_info)
+            cur_energy_info = get_energy_data_for_cur_log(energy_info)
             if energy_info:
                 save_to_json(JSON_FILE, energy_info)
                 save_cur_stats_json(glob_filename,cur_energy_info)

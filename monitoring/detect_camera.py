@@ -1,6 +1,9 @@
 import pyudev
 import subprocess
 import shutil
+import datetime
+
+from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
 
 def list_usb_cameras():
     context = pyudev.Context()
@@ -38,9 +41,24 @@ def detect_all_cameras():
     cameras.extend(list_rpi_cameras())
     return cameras
 
+def get_cur_camera_presence():
+    Rpi_cameras = list_rpi_cameras()!=[]
+    Usb_cameras = list_usb_cameras()!=[]
+    data ={
+        "timestamp" : datetime.datetime.now().isoformat(),
+        "cameras": {
+            "Rpi_cameras" : Rpi_cameras,
+            "Usb_cameras": Usb_cameras
+        }
+    }
+    return data
+
+
 
 if __name__ == "__main__":
     cams = detect_all_cameras()
+    data = get_cur_camera_presence()
+    save_cur_stats_json(glob_filename,data)
     for cam in cams:
         print(f"Camera: {cam.get('name', 'Unknown')}")
         print(f"Device: {cam.get('device_node', 'N/A')}")

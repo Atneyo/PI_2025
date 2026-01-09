@@ -144,7 +144,7 @@ def get_temp_info():
     }
     return data
 
-def get_data_for_cur_log(data):
+def get_temp_data_for_cur_log(data):
     data_part={
         "timestamp" : datetime.datetime.now().isoformat(),
         "temperature": {
