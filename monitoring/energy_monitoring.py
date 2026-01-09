@@ -2,12 +2,12 @@ import subprocess
 import signal
 import time
 import csv
-import json
 import platform
 import datetime
 import logging
-import tempfile
 import os
+
+from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 
@@ -24,7 +24,7 @@ def start_energy_monitoring():
     logging.info("Starting GLOBAL energy monitoring")
 
     cmd = [
-        "sudo", "/joularcore/target/release/joularcore",################# CHANGE THE PATH TO THE FULL PATH TO JOULARCORE ####################################
+        "sudo", "/usr/local/bin/joularcore",
         "-f", CSV_FILE   #-f option to enable writing to a given csv output
     ]
 
@@ -72,31 +72,17 @@ def get_energy_info():
         "energy": energy_row
     }
 
+def get_data_for_cur_log(data):
+    data_part ={
+        "timestamp" : datetime.datetime.now().isoformat(),
+        "energy": {
+            "total_power_w":data["energy"].get("Total Power (W)"),
+            "cpu_percent_used": data["energy"].get("CPU Usage (%)")
+        }
+    }
+    return data_part
 
-def save_to_json(filename, data):
-    #Append atomically to a JSON file (stored as a list).
 
-    try:
-        if os.path.exists(filename):
-            try:
-                with open(filename, "r") as f:
-                    json_data = json.load(f)
-            except (json.JSONDecodeError, PermissionError):
-                json_data = []
-        else:
-            json_data = []
-
-        json_data.append(data)
-
-        dirn = os.path.dirname(os.path.abspath(filename)) or "."
-        with tempfile.NamedTemporaryFile("w", dir=dirn, delete=False) as tf:
-            json.dump(json_data, tf, indent=4)
-            tmpname = tf.name
-
-        os.replace(tmpname, filename)
-
-    except Exception:
-        logging.exception("Failed to write to %s", filename)
 
 
 
@@ -106,8 +92,10 @@ if __name__ == "__main__":
     try:
         while True:
             energy_info = get_energy_info()
+            cur_energy_info = get_data_for_cur_log(energy_info)
             if energy_info:
                 save_to_json(JSON_FILE, energy_info)
+                save_cur_stats_json(glob_filename,cur_energy_info)
                 logging.info("Saved energy information")
             else:
                 logging.warning("No energy data available yet")

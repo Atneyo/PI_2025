@@ -1,11 +1,10 @@
 import psutil
-import json
 import platform
 import datetime
 import time
 import logging
-import tempfile
-import os
+
+from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s: %(message)s")
 
@@ -62,38 +61,45 @@ def get_memory_info():
         "swap_percent_used": swap.percent
     }
 
-def save_to_json(filename, data):
-    #append atomically to JSON file (entries are stored as a list, creating file if needed))
-    try:
-        if os.path.exists(filename):
-            try:
-                with open(filename, 'r') as f:
-                    json_data = json.load(f)
-            except (json.JSONDecodeError, PermissionError):
-                json_data = []
-        else:
-            json_data = []
 
-        json_data.append(data)
+def current_mem_disk_stats(memory_info, disk_info):
+    part_data={
+        "timestamp" : datetime.datetime.now().isoformat(),
+        "memory" : {
+            "used_ram": memory_info["used_ram"],
+            "ram_percent_used": memory_info["ram_percent_used"]
 
-        dirn = os.path.dirname(os.path.abspath(filename)) or '.'
-        with tempfile.NamedTemporaryFile('w', dir=dirn, delete=False) as tf:
-            json.dump(json_data, tf, indent=4)
-            tmpname = tf.name
-        os.replace(tmpname, filename)
-    except Exception:
-        logging.exception('Failed to write to %s', filename)
+        },
+        "swap":{
+            "used_swap": memory_info["used_swap"],
+            "swap_percent_used": memory_info["swap_percent_used"]
+        },
+        "storage" : {}
+    }
+    for mount, info in disk_info.items():
+        part_data["storage"][mount] = {
+            "used": info["used"],
+            "percent_used": info["percent_used"]
+        }
+    return part_data
+
+
+
+
 
 if __name__ == "__main__":
     try:
         while True:
             memory_info = get_memory_info()
             disk_info = get_disk_info()
+            curr = current_mem_disk_stats(memory_info, disk_info)
             # separate files for clarity
             save_to_json("memory_log.json", memory_info)
-            print("Saved memory info:", memory_info)
+            #print("Saved memory info:", memory_info)
             save_to_json("disk_log.json", {"timestamp": datetime.datetime.now().isoformat(), "disks": disk_info})
-            print("Saved disk info:", {"timestamp": datetime.datetime.now().isoformat(), "disks": disk_info})
+            #print("Saved disk info:", {"timestamp": datetime.datetime.now().isoformat(), "disks": disk_info})
+            save_cur_stats_json(glob_filename,curr)
+            #print("saved to curr file", {"timestamp": datetime.datetime.now().isoformat(), "data": curr})
             logging.info('Saved memory and disk stats')
             time.sleep(5)
     except KeyboardInterrupt:

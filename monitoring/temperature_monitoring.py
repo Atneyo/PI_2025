@@ -6,6 +6,8 @@ import glob
 import statistics
 import logging
 
+from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
+
 #ensure psutil name exists even if import fails
 psutil = None
 try:
@@ -132,35 +134,34 @@ def get_hailo_temperature():
             return device.get_chip_temperature()
     except:
         return None
+    
 
-#Function to write the temperature in a JSON file for the temperature function specifically
-def write_stats():
+def get_temp_info():
     data = {
         "timestamp": datetime.datetime.now().isoformat(),
         "cpu_temperature_c": get_cpu_temp(),
         "hailo_temperature_c": get_hailo_temperature()
     }
+    return data
 
-    # Append mode JSON list
-    if not os.path.exists(file):
-        with open(file, "w") as f:
-            json.dump([data], f, indent=4)
-    else:
-        with open(file, "r+") as f:
-            try:
-                existing = json.load(f)
-            except json.JSONDecodeError:
-                existing = []
-            existing.append(data)
-            f.seek(0)
-            json.dump(existing, f, indent=4)
+def get_data_for_cur_log(data):
+    data_part={
+        "timestamp" : datetime.datetime.now().isoformat(),
+        "temperature": {
+            "cpu_temperature_c": data["cpu_temperature_c"],
+            "hailo_temperature_c": data["hailo_temperature_c"]
+        }
+    }
+    return data_part
 
-    print("Saved:", data)
 
 
 if __name__ == "__main__":
     print(f"Raspberry Pi: {is_raspberry_pi()}")
     print(f"Hailo available: {HAILO}")
     while True:
-        write_stats()
+        data = get_temp_info()
+        data_cur = get_data_for_cur_log(data)
+        save_to_json(file,data)
+        save_cur_stats_json(glob_filename,data_cur)
         time.sleep(5)
