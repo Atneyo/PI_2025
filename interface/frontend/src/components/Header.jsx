@@ -5,7 +5,7 @@ function Header() {
 
   return (
     <header className="app-header">
-      <h1 className="app-title">AI Application</h1>
+      <h1 className="app-title"><button className="title-button" onClick={() => navigate("/")}>AI Application</button></h1>
       
       <div className="header-buttons">
         <button onClick={() => navigate("/stt")}>
