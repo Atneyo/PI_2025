@@ -27,7 +27,7 @@ function Parameters() {
         {/* Left column */}
         <div className="stats-column">
           {/* HAT button */}
-          <div className="control-item">
+          <div className="control-item ">
             <label className="switch">
               <input type="checkbox" checked={isOnHat} onChange={() => setIsOnHat(!isOnHat)} />
               <span className="slider"></span>
