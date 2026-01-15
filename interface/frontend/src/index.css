@@ -270,3 +270,10 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(10px);
 }
+
+/* Home Page */
+.home-container {
+  background: linear-gradient(135deg, #f0f4ff 0%, #e6f0ff 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 16px;
+}

@@ -65,7 +65,7 @@ function SttPage() {
         {/* Left part */}
         <div className="left-panel">
           <div className="container">
-            <h1 className="app-title" >Audio transcription</h1>
+            <h1 className="app-title" >Speech to Text</h1>
             {/* Drag & Drop Zone */}
             <div
               className="drop-zone"

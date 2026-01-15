@@ -5,15 +5,15 @@ function Header() {
 
   return (
     <header className="app-header">
-      <h1 className="app-title" >My Application</h1>
+      <h1 className="app-title">AI Application</h1>
       
       <div className="header-buttons">
         <button onClick={() => navigate("/stt")}>
-          STT
+          Speach to Text
         </button>
 
         <button onClick={() => navigate("/video")}>
-          Video
+          Object Detection
         </button>
       </div>
     </header>
