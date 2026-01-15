@@ -88,7 +88,6 @@ function VideoPage() {
             <label>Select a model</label>
             <select value={model} onChange={(e) => setModel(e.target.value)}>
               <option value="YOLOv11">YOLO v11</option>
-              <option value="YOLOv8">YOLO v8</option>
             </select>
 
             <button onClick={handleAnalyze}>▶️ Analyze</button>

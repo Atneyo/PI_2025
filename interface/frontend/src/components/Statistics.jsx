@@ -5,7 +5,7 @@ function Statistics() {
       <h2>Statistics</h2>
       <div className="stats-row">
         {/* Left column */}
-        <div className="column">
+        <div className="stats-column">
           <p>Treatment: {fps} fps</p>
         </div>
       </div>

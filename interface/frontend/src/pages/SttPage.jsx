@@ -85,9 +85,7 @@ function SttPage() {
 
             <label>Select a model</label>
             <select value={model} onChange={(e) => setModel(e.target.value)}>
-              <option value="whisper">Whisper</option>
-              <option value="vosk">Vosk</option>
-              <option value="wav2vec2">Wav2Vec2</option>
+              <option value="whisper">Whisper Base</option>
             </select>
 
             <button onClick={handleTranscribe}>

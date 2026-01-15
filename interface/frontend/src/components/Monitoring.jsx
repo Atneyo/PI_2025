@@ -10,7 +10,7 @@ function Monitoring() {
       <h2>Monitoring</h2>
       <div className="stats-row">
         {/* Left column */}
-        <div className="column">
+        <div className="stats-column">
           <p>Temperature: {temperature}°C</p>
           <p>Memory used: {memoryUsed} MB</p>
           <p>Consumption: {consumption} W</p>

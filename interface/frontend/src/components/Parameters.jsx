@@ -25,7 +25,7 @@ function Parameters() {
       <h2>Parameters</h2>
       <div className="stats-row">
         {/* Left column */}
-        <div className="column">
+        <div className="stats-column">
           {/* HAT button */}
           <div className="control-item">
             <label className="switch">
