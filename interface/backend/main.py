@@ -19,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+os.makedirs("interface/backend/outputs",exist_ok=True)
 app.mount("/outputs", StaticFiles(directory="interface/backend/outputs"), name="outputs")
 
 # return video result url and global statistics
@@ -29,12 +30,12 @@ async def analyze_video(files: list[UploadFile]):
         return {"error": "No video provided"}
     
     # check if uploads and outputs folders exist
-    os.makedirs("uploads",exist_ok=True)
-    os.makedirs("outputs",exist_ok=True)
+    os.makedirs("interface/backend/uploads",exist_ok=True)
+    # os.makedirs("outputs",exist_ok=True)
     
 
     video = files[0]
-    video_path = f"uploads/{video.filename}" # save video at this path
+    video_path = f"interface/backend/uploads/{video.filename}" # save video at this path
     
     # save file
     with open(video_path, "wb") as f:
@@ -58,12 +59,12 @@ async def analyze_audio(files: list[UploadFile]):
         return {"error": "No audio provided"}
     
     # check if uploads and outputs folders exist
-    os.makedirs("uploads",exist_ok=True)
-    os.makedirs("outputs",exist_ok=True)
+    os.makedirs("interface/backend/uploads",exist_ok=True)
+    # os.makedirs("outputs",exist_ok=True)
     
 
     audio = files[0]
-    audio_path = f"uploads/{audio.filename}" # save audio at this path
+    audio_path = f"interface/backend/uploads/{audio.filename}" # save audio at this path
 
     # save file
     with open(audio_path, "wb") as f:
@@ -79,12 +80,12 @@ async def analyze_audio(files: list[UploadFile]):
     return  {"text": audio_result, "stats": {}}
 
 # return current statistics from current detection, null if no detection
-@app.get("/statistics/video/")
+@app.get("/statistics-video/")
 async def get_video_statistics():
     pass
 
 # return current statistics from current transcription, null if no transcription
-@app.get("/statistics/audio/")
+@app.get("/statistics-audio/")
 async def get_audio_statistics():
     pass
 
