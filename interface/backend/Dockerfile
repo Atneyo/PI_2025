@@ -8,6 +8,8 @@ WORKDIR /app
 COPY models/speech_to_text/requirements_stt.txt .
 RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir -r requirements_stt.txt
+COPY monitoring/requirements.txt .
+RUN pip install -r requirements.txt
 
 # Install ffmpeg + necessary depedencies
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
@@ -16,7 +18,7 @@ RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 # Copy models code in backend
 COPY models/ /app/models
 
-# Copy models code in backend
+# Copy monitoring code in backend
 COPY monitoring/ /app/monitoring
 
 # Install models requirements so python can import it
