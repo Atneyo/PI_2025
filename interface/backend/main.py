@@ -106,6 +106,7 @@ async def get_audio_statistics():
 # return monitoring information
 @app.get("/monitoring/")
 async def get_monitoring():
-    with open("monitoring/current_monitoring_data.json","r") as f:
+    with open("monitoring/test.json","r") as f:
+    # with open("monitoring/current_monitoring_data.json","r") as f:
         data = json.load(f)
     return data
