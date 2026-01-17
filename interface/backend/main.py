@@ -1,11 +1,24 @@
 from typing import Annotated
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from models.speech_to_text.transcription import transcribe
 import os
+import json
+import subprocess
 
-app = FastAPI()
+# define life of the application
+# The first part of the function, before the yield, will be executed before the application starts.
+# And the part after the yield will be executed after the application has finished.
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Launch monitoring
+    subprocess.Popen(["python3","monitoring/all_monitoring2.py"])
+    yield
+    # Stop monitoring
+
+app = FastAPI(lifespan=lifespan)
 
 
 VIDEO_RESULT_PATH = "result.webm"
@@ -21,6 +34,7 @@ app.add_middleware(
 
 os.makedirs("interface/backend/outputs",exist_ok=True)
 app.mount("/outputs", StaticFiles(directory="interface/backend/outputs"), name="outputs")
+
 
 # return video result url and global statistics
 @app.post("/analyze-video/")
@@ -92,4 +106,6 @@ async def get_audio_statistics():
 # return monitoring information
 @app.get("/monitoring/")
 async def get_monitoring():
-    pass
+    with open("monitoring/current_monitoring_data.json","r") as f:
+        data = json.load(f)
+    return data
