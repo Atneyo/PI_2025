@@ -14,7 +14,7 @@ import subprocess
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Launch monitoring
-    subprocess.Popen(["python3","monitoring/all_monitoring2.py"])
+    subprocess.Popen(["python3","monitoring/all_monitoring.py"])
     yield
     # Stop monitoring
 
@@ -106,7 +106,6 @@ async def get_audio_statistics():
 # return monitoring information
 @app.get("/monitoring/")
 async def get_monitoring():
-    with open("monitoring/test.json","r") as f:
-    # with open("monitoring/current_monitoring_data.json","r") as f:
+    with open("monitoring/current_monitoring_data.json","r") as f:
         data = json.load(f)
     return data
