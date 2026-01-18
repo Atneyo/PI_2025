@@ -9,7 +9,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /usr/local/bin/joularcore:/usr/local/bin/joularcore:ro
+      - /usr/local/bin/joularcore:/usr/local/bin/joularcore:ro # comment this line if you have not joularcore installed
     # volumes: # le container utilise les fichiers locaux directement (pas besoin de reconstruire l'image quand on fait des modifications)
     #   - ./interface/backend:/app # dossier_local:dossier_container
     # problem with import of models
