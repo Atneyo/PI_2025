@@ -123,7 +123,7 @@ git clone https://github.com/joular/joularcore.git
 cd joularcore
 apt install rustup
 rustup default stable
-cargo build --release
+cargo build --release --features sbc
 cp target/release/joularcore /usr/local/bin/joularcore
 cd ..
 rm -rf joularcore
