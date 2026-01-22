@@ -9,7 +9,7 @@ function Header() {
       
       <div className="header-buttons">
         <button onClick={() => navigate("/stt")}>
-          Speach to Text
+          Speech to Text
         </button>
 
         <button onClick={() => navigate("/video")}>

@@ -39,3 +39,15 @@ export async function analyzeAudio(files) {
 
   return await response.json();
 }
+
+export async function getMonitoring() {
+  const response = await fetch(`${BACKEND_URL}/monitoring/`, {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Error during analyze");
+  }
+
+  return await response.json();
+}

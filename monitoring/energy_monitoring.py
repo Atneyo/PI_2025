@@ -24,14 +24,13 @@ def start_energy_monitoring():
     logging.info("Starting GLOBAL energy monitoring")
 
     cmd = [
-        "sudo", "/usr/local/bin/joularcore",
+        "/usr/local/bin/joularcore",
         "-f", CSV_FILE   #-f option to enable writing to a given csv output
     ]
 
     process=subprocess.Popen(
         cmd
     )
-
 
 def stop_energy_monitoring():
     global process
