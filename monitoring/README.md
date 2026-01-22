@@ -32,3 +32,22 @@ After setting up the environment and installing the dependencies, you can run th
 ```bash
 python3 temperature_monitoring.py
 ```
+
+For energy monitoring you need to change line 26 of `energy_monitoring.py` file to use it without docker.
+
+With Docker:
+```
+cmd = [
+        "/usr/local/bin/joularcore",
+        "-f", CSV_FILE   #-f option to enable writing to a given csv output
+    ]
+```
+
+Without Docker:
+```
+cmd = [
+        "sudo",
+        "/usr/local/bin/joularcore",
+        "-f", CSV_FILE   #-f option to enable writing to a given csv output
+    ]
+```
