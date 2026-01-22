@@ -35,7 +35,8 @@ fqdn==1.5.1
 freetype-py==2.5.1
 gpiod==2.2.0
 gpiozero==2.0.1
--e git+https://github.com/hailo-ai/hailo-apps-infra.git@9d12505cd64df730a793c779039cbf1b5855b33f#egg=hailo_apps
+hailo-apps @ https://github.com/hailo-ai/hailo-apps/archive/refs/tags/v25.10.0.tar.gz
+
 hailo-tappas-core-python-binding==5.1.0
 hailort==4.23.0
 html5lib-modern==1.2
