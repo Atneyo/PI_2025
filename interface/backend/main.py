@@ -5,9 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from models.speech_to_text.transcription import transcribe
 import os
-from interface.backend.AI.yolo_detection import yolo_detection
 import json
 import subprocess
+from monitoring.detect_hailo import is_hailo_hat_present
+if is_hailo_hat_present():
+    from interface.backend.AI.yolo_detection import yolo_detection
 
 # define life of the application
 # The first part of the function, before the yield, will be executed before the application starts.

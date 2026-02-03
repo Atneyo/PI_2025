@@ -1,6 +1,9 @@
 import datetime
 
-from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
+try:
+    from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
+except:
+    from monitoring.global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
 
 def is_hailo_hat_present():
     try:
