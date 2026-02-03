@@ -41,11 +41,12 @@ function SttPage() {
 
   const handleTranscribe = async () => {
     setTranscriptionResult("");
-    setLoadingBar(null);
+    
     if (audioFiles.length === 0) {
       alert("Please select an audio file");
       return;
     }
+    setLoadingBar(null);
 
     // print transcription
     try {
