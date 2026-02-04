@@ -13,6 +13,8 @@ function VideoPage() {
   const [analysisResult, setAnalysisResult] = useState("");
   const [selectedVideoURL, setSelectedVideoURL] = useState(null);
 
+  const [isOnHat, setIsOnHat] = useState(false); // choose if you want to use HAT or not
+
   const fileInputRef = useRef(null);
 
   const handleFiles = (files) => {
