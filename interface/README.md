@@ -10,15 +10,18 @@ npm install
 npm run dev
 ```
 
-I you have access issues try deleting `node_modules` repertory before `npm install` command.
+If you have access issues try deleting `node_modules` repertory before `npm install` command.
 
 ## Backend Installation and Launch
 
 From the root of the repo.
 Requirements :
 ```
-pip install -r interface/backend/requirements_backend.txt
-pip install -r models/speech_to_text/requirements_stt.txt
+pip install -r interface/backend/requirements_backend.txt   //backend
+pip install -r models/speech_to_text/requirements_stt.txt   //stt
+pip install -r monitoring/requirements.txt                  // monitoring
+pip install -r interface/backend/requirements.txt           // YOLO with HAT
+pip install -r interface/backend/requirements_yolo_without_hat.txt   // YOLO without HAT
 ```
 
 From the root of the repo:
