@@ -12,6 +12,7 @@ function VideoPage() {
   const [videoFiles, setVideoFiles] = useState([]);
   const [analysisResult, setAnalysisResult] = useState("");
   const [selectedVideoURL, setSelectedVideoURL] = useState(null);
+  const [loadingBar, setLoadingBar] = useState(-1); // -1 : not loading, null : loading but don't know time, >=0 : loading and know how many time
 
   const [isOnHat, setIsOnHat] = useState(false); // choose if you want to use HAT or not
 
@@ -42,10 +43,14 @@ function VideoPage() {
   };
 
   const handleAnalyze = async () => {
+    setSelectedVideoURL(null);
+    
     if (videoFiles.length === 0) {
       alert("Please select a video file");
       return;
     }
+
+    setLoadingBar(null);
 
     // Print result video
     try {
@@ -53,8 +58,13 @@ function VideoPage() {
       setSelectedVideoURL(data["video"]);
     } catch (err) {
       console.error("Error during analyze :",err);
+    } finally {
+      setLoadingBar(-1);
     }
   };
+
+  // Allow to know if it's currently loading
+  const isBusy = loadingBar === null || loadingBar >= 0;
 
   return (
     <div>
@@ -131,6 +141,11 @@ function VideoPage() {
                   style={{ borderRadius: "8px", marginTop: "10px" }}
                 />
               </div>
+            )}
+
+            {/* loading bar */}
+            {isBusy && (
+              <progress value={loadingBar} />
             )}
 
             {/* --- RESULT --- */}

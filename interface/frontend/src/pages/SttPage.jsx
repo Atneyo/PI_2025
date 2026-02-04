@@ -11,6 +11,7 @@ function SttPage() {
   const [model, setModel] = useState("whisper");
   const [audioFiles, setAudioFiles] = useState([]);
   const [transcriptionResult, setTranscriptionResult] = useState("");
+  const [loadingBar, setLoadingBar] = useState(-1); // -1 : not loading, null : loading but don't know time, >=0 : loading and know how many time
 
   const fileInputRef = useRef(null);
 
@@ -39,20 +40,29 @@ function SttPage() {
   };
 
   const handleTranscribe = async () => {
+    setTranscriptionResult("");
+    
     if (audioFiles.length === 0) {
       alert("Please select an audio file");
       return;
     }
+    setLoadingBar(null);
 
     // print transcription
     try {
+
       const data = await analyzeAudio(audioFiles); // call backend (see api.jsx)
       setTranscriptionResult(data["text"]);
     } catch (err) {
       console.error("Error during transcription :",err);
+    } finally {
+      setLoadingBar(-1);
     }
 
   };
+
+  // Allow to know if it's currently loading
+  const isBusy = loadingBar === null || loadingBar >= 0;
 
   return (
     <div>
@@ -111,6 +121,12 @@ function SttPage() {
                 </ul>
               </div>
             )}
+
+            {/* loading bar */}
+            {isBusy && (
+              <progress value={loadingBar} />
+            )}
+            
 
             {transcriptionResult && (
               <div className="result">
