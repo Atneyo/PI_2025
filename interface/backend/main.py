@@ -1,6 +1,6 @@
 from typing import Annotated
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from models.speech_to_text.transcription import transcribe
@@ -10,7 +10,7 @@ import subprocess
 from monitoring.detect_hailo import is_hailo_hat_present
 if is_hailo_hat_present():
     from interface.backend.AI.yolo_detection import yolo_detection
-
+from interface.backend.AI.yolo_detection_without_yolo import yolo_detection_without_yolo
 # define life of the application
 # The first part of the function, before the yield, will be executed before the application starts.
 # And the part after the yield will be executed after the application has finished.
@@ -41,11 +41,11 @@ app.mount("/outputs", StaticFiles(directory="interface/backend/outputs"), name="
 
 # return video result url and global statistics
 @app.post("/analyze-video/")
-async def analyze_video(files: list[UploadFile]):
+async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
     
     if not files:
         return {"error": "No video provided"}
-    
+
     # check if uploads and outputs folders exist
     os.makedirs("interface/backend/uploads",exist_ok=True)
     # os.makedirs("outputs",exist_ok=True)
@@ -59,14 +59,25 @@ async def analyze_video(files: list[UploadFile]):
         f.write(await video.read())
 
     # call YOLO on video_path
-    recorded_path = yolo_detection(
-        live_input=False,
-        video_path=video_path,
-        frame_rate=15,
-        output_dir="interface/backend/outputs",
-        record_filename=VIDEO_RESULT_PATH,
-        hef_path="interface/backend/AI/yolov11n.hef",
-    )
+    if isHat:
+        if is_hailo_hat_present():
+            recorded_path = yolo_detection(
+                live_input=False,
+                video_path=video_path,
+                frame_rate=15,
+                output_dir="interface/backend/outputs",
+                record_filename=VIDEO_RESULT_PATH,
+                hef_path="interface/backend/AI/yolov11n.hef",
+            )
+    else:
+        recorded_path = yolo_detection_without_yolo(
+            live_input=False,
+            video_path=video_path,
+            frame_rate=15,
+            output_dir="interface/backend/outputs",
+            record_filename=VIDEO_RESULT_PATH,
+            yolo_path="interface/backend/AI/yolov11n.pt",
+        )
 
     # delete input file to save memory
     os.remove(video_path)

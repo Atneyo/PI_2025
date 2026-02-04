@@ -115,7 +115,7 @@ def _open_capture(source) -> cv2.VideoCapture:
 def _fourcc_candidates(suffix: str) -> list[str]:
     suffix = suffix.lower()
     if suffix == ".webm":
-        return ["VP90", "VP80", "H264", "mp4v"]
+        return ["VP80", "VP90", "H264", "mp4v"]
     if suffix in {".mkv", ".avi"}:
         return ["H264", "XVID", "mp4v"]
     return ["mp4v", "avc1", "H264"]
@@ -157,7 +157,7 @@ def yolo_detection_without_yolo(
     *,
     video_path: str | Path | None = None,
     output_dir: str | Path | None = None,
-    record_filename: str | None = None,
+    record_filename: str | None = None, 
     frame_rate: int | None = None,
     record_bitrate: int | None = None,
     enable_recording: bool = ENABLE_RECORDING,

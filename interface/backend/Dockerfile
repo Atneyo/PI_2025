@@ -10,6 +10,8 @@ RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/c
 RUN pip install --no-cache-dir -r requirements_stt.txt
 COPY monitoring/requirements.txt .
 RUN pip install -r requirements.txt
+COPY interface/backend/requirements_yolo_without_hat.txt .
+RUN pip install -r requirements_yolo_without_hat.txt
 
 # Install ffmpeg + necessary depedencies
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*

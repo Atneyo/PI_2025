@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function Parameters() {
+function Parameters({ settingsRef }) {
 
   const [isOnHat, setIsOnHat] = useState(false);
   const [isOnCam, setIsOnCam] = useState(false);
   const [selectedCamera, setSelectedCamera] = useState("");
   const [FPS, setFPS] = useState(0);
+
+  useEffect(() => {
+    if (settingsRef) {
+      settingsRef.current = {
+        isOnHat,
+        isOnCam,
+        selectedCamera,
+        FPS
+      };
+    }
+  }, [isOnHat, isOnCam, selectedCamera, FPS, settingsRef]);
 
   const handleChangeFPS = (e) => {
     const value = e.target.value;

@@ -14,8 +14,9 @@ function VideoPage() {
   const [selectedVideoURL, setSelectedVideoURL] = useState(null);
   const [loadingBar, setLoadingBar] = useState(-1); // -1 : not loading, null : loading but don't know time, >=0 : loading and know how many time
 
-  const [isOnHat, setIsOnHat] = useState(false); // choose if you want to use HAT or not
-
+  const paramsRef = useRef({
+      isOnHat: false
+    });
   const fileInputRef = useRef(null);
 
   const handleFiles = (files) => {
@@ -50,11 +51,14 @@ function VideoPage() {
       return;
     }
 
+    const currentSettings = paramsRef.current;
+    console.log("Paramètres envoyés :", currentSettings);
+
     setLoadingBar(null);
 
     // Print result video
     try {
-      const data = await analyzeVideo(videoFiles); // call backend (see api.jsx)
+      const data = await analyzeVideo(videoFiles, currentSettings.isOnHat); // call backend (see api.jsx)
       setSelectedVideoURL(data["video"]);
     } catch (err) {
       console.error("Error during analyze :",err);
@@ -160,7 +164,7 @@ function VideoPage() {
 
         {/* Right part */}
         <div className="right-panel">
-          <Parameters />
+          <Parameters settingsRef={paramsRef} />
           <Monitoring/>
           <Statistics/>
         </div>
