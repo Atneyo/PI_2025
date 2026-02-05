@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.concurrency import run_in_threadpool
 from models.speech_to_text.transcription import transcribe
 import os
 import json
@@ -61,7 +62,8 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
     # call YOLO on video_path
     if isHat:
         if is_hailo_hat_present():
-            recorded_path = yolo_detection(
+            recorded_path = await run_in_threadpool(
+                yolo_detection,
                 live_input=False,
                 video_path=video_path,
                 frame_rate=15,
@@ -70,7 +72,8 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
                 hef_path="interface/backend/AI/yolov11n.hef",
             )
     else:
-        recorded_path = yolo_detection_without_yolo(
+        recorded_path = await run_in_threadpool(
+            yolo_detection_without_yolo,
             live_input=False,
             video_path=video_path,
             frame_rate=15,
@@ -106,7 +109,7 @@ async def analyze_audio(files: list[UploadFile]):
         f.write(await audio.read())
 
     # call Whisper on audio_path
-    audio_result = transcribe(audio_path)
+    audio_result = await run_in_threadpool(transcribe, audio_path)
 
     # delete input file to save memory
     os.remove(audio_path)
