@@ -18,7 +18,7 @@ function SttPage() {
 
   const handleFiles = (files) => {
     const filteredFiles = Array.from(files).filter(file =>
-      file.type.startsWith("audio/")
+      file.type.startsWith("audio/") || file.type.startsWith("video/")
     );
     setAudioFiles((prev) => [...prev, ...filteredFiles]);
   };
