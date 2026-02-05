@@ -5,28 +5,28 @@ function Parameters({ settingsRef, showFps = true }) {
   const [isOnHat, setIsOnHat] = useState(false);
   const [isOnCam, setIsOnCam] = useState(false);
   const [selectedCamera, setSelectedCamera] = useState("");
-  const [FPS, setFPS] = useState(0);
+  const [fps, setFps] = useState(15);
 
   useEffect(() => {
     if (settingsRef) {
       settingsRef.current = {
         isOnHat,
+        fps,
         isOnCam,
-        selectedCamera,
-        FPS
+        selectedCamera
       };
     }
-  }, [isOnHat, isOnCam, selectedCamera, FPS, settingsRef]);
+  }, [isOnHat, isOnCam, selectedCamera, fps, settingsRef]);
 
-  const handleChangeFPS = (e) => {
+  const handleChangeFps = (e) => {
     const value = e.target.value;
     // Accepter que le champ soit vide, sinon convertir en entier
     if (value === "") {
-      setFPS("");
+      setFps("");
     } else {
       const intValue = parseInt(value, 10);
       if (!isNaN(intValue)) {
-        setFPS(intValue);
+        setFps(intValue);
       }
     }
   };
@@ -50,8 +50,8 @@ function Parameters({ settingsRef, showFps = true }) {
           <div className="control-item">
             <input
               type="number"
-              value={FPS}
-              onChange={handleChangeFPS}
+              value={fps}
+              onChange={handleChangeFps}
               className="number-input"
             />
             <label>FPS</label>

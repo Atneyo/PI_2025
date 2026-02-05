@@ -15,7 +15,8 @@ function VideoPage() {
   const [loadingBar, setLoadingBar] = useState(-1); // -1 : not loading, null : loading but don't know time, >=0 : loading and know how many time
 
   const paramsRef = useRef({
-      isOnHat: false
+      isOnHat: false,
+      fps: 15
     });
   const fileInputRef = useRef(null);
 
@@ -58,7 +59,7 @@ function VideoPage() {
 
     // Print result video
     try {
-      const data = await analyzeVideo(videoFiles, currentSettings.isOnHat); // call backend (see api.jsx)
+      const data = await analyzeVideo(videoFiles, currentSettings.isOnHat, currentSettings.fps); // call backend (see api.jsx)
       setSelectedVideoURL(data["video"]);
     } catch (err) {
       console.error("Error during analyze :",err);
