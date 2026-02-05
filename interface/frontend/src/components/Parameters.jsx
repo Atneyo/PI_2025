@@ -58,8 +58,7 @@ function Parameters({ settingsRef }) {
         </div>
 
         {/* Right column */}
-        <div className="stats-column">
-          {/* Live button */}
+        {/* <div className="stats-column">
           <div className="control-item">
             <label className="switch">
               <input type="checkbox" checked={isOnCam} onChange={() => setIsOnCam(!isOnCam)} />
@@ -67,7 +66,6 @@ function Parameters({ settingsRef }) {
             </label>
             <label>Live</label>
           </div>
-          {/* Select camera */}
           <div className="control-item">
             <select
               value={selectedCamera}
@@ -80,7 +78,7 @@ function Parameters({ settingsRef }) {
             </select>
             <label>Camera:</label>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
