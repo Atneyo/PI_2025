@@ -1,6 +1,6 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-export async function analyzeVideo(files, isOnHat) {
+export async function analyzeVideo(files, isOnHat, fps) {
   const formData = new FormData();
 
   for (let i = 0; i < files.length; i++) {
@@ -8,6 +8,7 @@ export async function analyzeVideo(files, isOnHat) {
   }
 
   formData.append("isHat", isOnHat);
+  formData.append("fps", fps);
 
   const response = await fetch(`${BACKEND_URL}/analyze-video/`, {
     method: "POST",

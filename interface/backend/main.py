@@ -42,7 +42,7 @@ app.mount("/outputs", StaticFiles(directory="interface/backend/outputs"), name="
 
 # return video result url and global statistics
 @app.post("/analyze-video/")
-async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
+async def analyze_video(files: list[UploadFile], isHat: bool = Form(), fps: int = Form()):
     
     if not files:
         return {"error": "No video provided"}
@@ -66,7 +66,7 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
                 yolo_detection,
                 live_input=False,
                 video_path=video_path,
-                frame_rate=15,
+                frame_rate=fps,
                 output_dir="interface/backend/outputs",
                 record_filename=VIDEO_RESULT_PATH,
                 hef_path="interface/backend/AI/yolov11n.hef",
@@ -76,7 +76,7 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
             yolo_detection_without_yolo,
             live_input=False,
             video_path=video_path,
-            frame_rate=15,
+            frame_rate=fps,
             output_dir="interface/backend/outputs",
             record_filename=VIDEO_RESULT_PATH,
             yolo_path="interface/backend/AI/yolov11n.pt",

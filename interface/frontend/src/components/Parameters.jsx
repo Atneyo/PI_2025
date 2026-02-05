@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function Parameters({ settingsRef }) {
+function Parameters({ settingsRef, showFps = true }) {
 
   const [isOnHat, setIsOnHat] = useState(false);
   const [isOnCam, setIsOnCam] = useState(false);
@@ -46,6 +46,7 @@ function Parameters({ settingsRef }) {
             <label>HAT</label>
           </div>
           {/* Enter FPS */}
+          {showFps && (
           <div className="control-item">
             <input
               type="number"
@@ -55,6 +56,7 @@ function Parameters({ settingsRef }) {
             />
             <label>FPS</label>
           </div>
+          )}
         </div>
 
         {/* Right column */}
