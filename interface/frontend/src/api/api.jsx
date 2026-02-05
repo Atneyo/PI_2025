@@ -21,7 +21,7 @@ export async function analyzeVideo(files, isOnHat) {
   return await response.json();
 }
 
-export async function analyzeAudio(files) {
+export async function analyzeAudio(files, modelName) {
   console.log(BACKEND_URL)
 
   const formData = new FormData();
@@ -29,6 +29,8 @@ export async function analyzeAudio(files) {
   for (let i = 0; i < files.length; i++) {
     formData.append("files", files[i]);
   }
+
+  formData.append("model", modelName);
 
   const response = await fetch(`${BACKEND_URL}/analyze-audio/`, {
     method: "POST",

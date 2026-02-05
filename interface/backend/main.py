@@ -91,7 +91,7 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form()):
 
 # return transcription and global statistics
 @app.post("/analyze-audio/")
-async def analyze_audio(files: list[UploadFile]):
+async def analyze_audio(files: list[UploadFile], model: str = Form("base")):
     
     if not files:
         return {"error": "No audio provided"}
@@ -109,13 +109,13 @@ async def analyze_audio(files: list[UploadFile]):
         f.write(await audio.read())
 
     # call Whisper on audio_path
-    audio_result = await run_in_threadpool(transcribe, audio_path)
+    audio_result, stats = await run_in_threadpool(transcribe, audio_path, model_name=model, output_dir="interface/backend/outputs/stt")
 
     # delete input file to save memory
     os.remove(audio_path)
     
     
-    return  {"text": audio_result, "stats": {}}
+    return  {"text": audio_result, "stats": stats}
 
 # return current statistics from current detection, null if no detection
 @app.get("/statistics-video/")
