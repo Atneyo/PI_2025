@@ -4,6 +4,7 @@ from energy_monitoring import *
 from temperature_monitoring import get_temp_info, get_temp_data_for_cur_log, file
 from memory_monitoring import get_disk_info, get_memory_info, current_mem_disk_stats
 from global_monitoring_functions import *
+import time
 
 
 start_energy_monitoring()
@@ -32,7 +33,7 @@ try:
             logging.info("Saved energy information")
         else:
             logging.warning("No energy data available yet")
-        #camera
+        # camera
         save_cur_stats_json(glob_filename, cam_presence)
         logging.info("Saved camera presence information")
         #hailo

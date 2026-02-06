@@ -286,3 +286,37 @@ input:checked + .slider:before {
   padding: 16px;
 }
 
+/* Monitoring */
+/* align text and led */
+.status-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  width: 150px;
+}
+
+/* Circle */
+.led-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: all 0.3s ease;
+  border: 1px solid #555;
+}
+
+/* ON (light) */
+.led-indicator.on {
+  background-color: #00ff00; /* Vert fluo */
+  border-color: #00ff00;
+}
+
+/* OFF */
+.led-indicator.off {
+  background-color: #333; /* Gris éteint */
+  box-shadow: inset 0 0 2px black; /* Effet creusé */
+  /* Si tu préfères rouge quand c'est éteint/absent, décommente la ligne dessous : */
+  /* background-color: #550000; */
+}

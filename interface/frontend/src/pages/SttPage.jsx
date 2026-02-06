@@ -8,16 +8,17 @@ import Header from "../components/Header";
 
 function SttPage() {
   const navigate = useNavigate();
-  const [model, setModel] = useState("whisper");
+  const [model, setModel] = useState("base");
   const [audioFiles, setAudioFiles] = useState([]);
   const [transcriptionResult, setTranscriptionResult] = useState("");
+  const [finalStats, setFinalStats] = useState({});
   const [loadingBar, setLoadingBar] = useState(-1); // -1 : not loading, null : loading but don't know time, >=0 : loading and know how many time
 
   const fileInputRef = useRef(null);
 
   const handleFiles = (files) => {
     const filteredFiles = Array.from(files).filter(file =>
-      file.type.startsWith("audio/")
+      file.type.startsWith("audio/") || file.type.startsWith("video/")
     );
     setAudioFiles((prev) => [...prev, ...filteredFiles]);
   };
@@ -51,8 +52,9 @@ function SttPage() {
     // print transcription
     try {
 
-      const data = await analyzeAudio(audioFiles); // call backend (see api.jsx)
+      const data = await analyzeAudio(audioFiles, model); // call backend (see api.jsx)
       setTranscriptionResult(data["text"]);
+      setFinalStats(data["stats"])
     } catch (err) {
       console.error("Error during transcription :",err);
     } finally {
@@ -95,7 +97,8 @@ function SttPage() {
 
             <label>Select a model</label>
             <select value={model} onChange={(e) => setModel(e.target.value)}>
-              <option value="whisper">Whisper Base</option>
+              <option value="base">Whisper Base</option>
+              <option value="tiny">Whisper Tiny</option>
             </select>
 
             <button onClick={handleTranscribe}>
@@ -139,9 +142,28 @@ function SttPage() {
 
         {/* Right part */}
         <div className="right-panel">
-          <Parameters />
+          {/* <Parameters showFps={false} /> */}
           <Monitoring/>
-          <Statistics/>
+          {/* <Statistics/> */}
+          {/* Global statistics */}
+          {finalStats && (
+            <div>
+              <h2>Last Analysis</h2>
+              <div className="stats-row">
+                {/* Left column */}
+                <div className="stats-column">
+                  <p>Model: {finalStats.model_used}</p>
+                  <p>Total time: {finalStats.total_process_time?.toFixed(3)} s</p>
+                </div>
+
+                {/* Right column */}
+                <div className="stats-column">
+                  <p>Load: {finalStats.load_time?.toFixed(3)} s</p>
+                  <p>Transcription: {finalStats.transcription_time?.toFixed(3)} s</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
