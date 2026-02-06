@@ -2,7 +2,7 @@ import whisper
 import time
 import os
 import json
-import jiwer  # pip install jiwer
+import jiwer
 
 def transcribe(file, model_name="base",output_dir="interface/backend/outputs/stt"):
     # loading model
@@ -29,6 +29,7 @@ def transcribe(file, model_name="base",output_dir="interface/backend/outputs/stt
     output_dir = os.path.join(output_dir, file_name)
     os.makedirs(output_dir, exist_ok=True)
     
+    # write results
     txt_path = os.path.join(output_dir, f"{file_name}.txt")
     json_path = os.path.join(output_dir, f"{file_name}.json")
     with open(txt_path, "w", encoding="utf-8") as f:
@@ -39,7 +40,8 @@ def transcribe(file, model_name="base",output_dir="interface/backend/outputs/stt
     return result["text"], stats
 
 if __name__ == '__main__':
-    audio_file = "song.mp3"
+    audio_file = "song.mp3" # file you want to test
+
     reference_text = """Two roads diverged in a yellow wood,
                         And sorry I could not travel both
                         And be one traveler, long I stood
@@ -75,8 +77,10 @@ if __name__ == '__main__':
                 text, stats = transcribe(audio_file, model_name=model_name, output_dir="benchmark")
                 
                 # Calculate WER
-                # clean the result
+
+                # clean the result before
                 clean_result = transformation(text)
+                
                 current_wer = jiwer.wer(clean_reference, clean_result)
                 stats["wer"] = current_wer
                 model_stats.append(stats)
