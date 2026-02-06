@@ -50,7 +50,13 @@ async def analyze_video(files: list[UploadFile]):
     
 
     video = files[0]
-    video_path = f"interface/backend/uploads/{video.filename}" # save video at this path
+    name = os.path.basename(video.filename)
+    stem = os.path.splitext(name)[0]
+    video_path = f"interface/backend/uploads/{name}" # save video at this path
+    
+
+    
+    VIDEO_RESULT_PATH = f"yolo-{name}"
     
     # save file
     with open(video_path, "wb") as f:
@@ -61,7 +67,7 @@ async def analyze_video(files: list[UploadFile]):
         live_input=False,
         video_path=video_path,
         frame_rate=15,
-        output_dir="interface/backend/outputs",
+        output_dir=f"interface/backend/outputs/yolo-{stem}",
         record_filename=VIDEO_RESULT_PATH,
         hef_path="interface/backend/AI/yolov11n.hef",
     )
@@ -69,7 +75,7 @@ async def analyze_video(files: list[UploadFile]):
     # delete input file to save memory
     os.remove(video_path)
     
-    video_url = f"http://127.0.0.1:8000/outputs/{VIDEO_RESULT_PATH}"
+    video_url = f"http://127.0.0.1:8000/outputs/yolo-{stem}/{VIDEO_RESULT_PATH}"
     
     return  {"video": video_url, "recording_path": str(recorded_path), "stats": {}}
 

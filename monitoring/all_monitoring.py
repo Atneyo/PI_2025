@@ -5,6 +5,10 @@ from temperature_monitoring import get_temp_info, get_temp_data_for_cur_log, fil
 from memory_monitoring import get_disk_info, get_memory_info, current_mem_disk_stats
 from global_monitoring_functions import *
 
+CAMERA_LOG_FILE = "camera_log.json"
+HAILO_LOG_FILE = "hailo_log.json"
+TEMP_LOG_FILE = file
+
 
 start_energy_monitoring()
 time.sleep(10)
@@ -33,14 +37,16 @@ try:
         else:
             logging.warning("No energy data available yet")
         #camera
+        save_to_json(CAMERA_LOG_FILE, cam_presence)
         save_cur_stats_json(glob_filename, cam_presence)
         logging.info("Saved camera presence information")
         #hailo
+        save_to_json(HAILO_LOG_FILE, hailo_presence)
         save_cur_stats_json(glob_filename, hailo_presence)
         logging.info("Saved hailo presence information")
         #temperature
         if temp_data:
-            save_to_json(JSON_FILE, temp_data)
+            save_to_json(TEMP_LOG_FILE, temp_data)
             save_cur_stats_json(glob_filename,cur_temp_data)
             logging.info("Saved temperature information")
         else:

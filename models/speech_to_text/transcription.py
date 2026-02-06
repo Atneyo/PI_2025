@@ -6,5 +6,5 @@ def transcribe(file, model="base"):
     return result["text"]
 
 if '__main__'==__name__:
-    result = transcribe("test_poeme_anglais.wav")
+    result = transcribe("test.mp3")
     print(result)
