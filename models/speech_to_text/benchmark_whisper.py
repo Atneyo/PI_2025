@@ -71,7 +71,7 @@ if __name__ == '__main__':
                 model_stats.append(stats)
                 
                 # Write iteration details
-                f.write(f"Iteration {i+1} : Temps = {stats['transcription_time']:.2f}s | WER = {current_wer:.4f}\n")
+                f.write(f"Iteration {i+1}: Time = {stats['transcription_time']:.2f}s | WER = {current_wer:.4f}\n")
 
             # Calculate averages
             avg_load = sum(s["load_time"] for s in model_stats) / iterations
