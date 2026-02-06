@@ -185,7 +185,7 @@ def yolo_detection(
         finally:
             user_data.print_summary()
 
-    return finalized_recording or app.record_output
+    return finalized_recording or app.record_output, user_data
 
 
 if __name__ == "__main__":

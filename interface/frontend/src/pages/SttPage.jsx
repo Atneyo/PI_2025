@@ -144,7 +144,7 @@ function SttPage() {
         <div className="right-panel">
           {/* <Parameters showFps={false} /> */}
           <Monitoring/>
-          <Statistics/>
+          {/* <Statistics/> */}
           {/* Global statistics */}
           {finalStats && (
             <div>

@@ -296,7 +296,7 @@ def yolo_detection_without_yolo(
         if enable_recording:
             print(f"Recorded video: {record_output}")
 
-        return record_output
+        return record_output, stats_summary
     finally:
         cap.release()
 

@@ -62,7 +62,7 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form(), fps: int 
     # call YOLO on video_path
     if isHat:
         if is_hailo_hat_present():
-            recorded_path = await run_in_threadpool(
+            recorded_path, stats = await run_in_threadpool(
                 yolo_detection,
                 live_input=False,
                 video_path=video_path,
@@ -72,7 +72,7 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form(), fps: int 
                 hef_path="interface/backend/AI/yolov11n.hef",
             )
     else:
-        recorded_path = await run_in_threadpool(
+        recorded_path, stats = await run_in_threadpool(
             yolo_detection_without_yolo,
             live_input=False,
             video_path=video_path,
@@ -87,7 +87,7 @@ async def analyze_video(files: list[UploadFile], isHat: bool = Form(), fps: int 
     
     video_url = f"http://127.0.0.1:8000/outputs/{VIDEO_RESULT_PATH}"
     
-    return  {"video": video_url, "recording_path": str(recorded_path), "stats": {}}
+    return  {"video": video_url, "recording_path": str(recorded_path), "stats": stats}
 
 # return transcription and global statistics
 @app.post("/analyze-audio/")
