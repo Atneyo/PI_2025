@@ -39,9 +39,7 @@ def transcribe(file, model_name="base",output_dir="interface/backend/outputs/stt
     return result["text"], stats
 
 if __name__ == '__main__':
-    # --- CONFIGURATION DU BENCHMARK ---
-    audio_file = "test_poeme_anglais.wav"
-    # /!\ REMPLACE PAR LE VRAI TEXTE DU POÈME /!\
+    audio_file = "song.mp3"
     reference_text = """Two roads diverged in a yellow wood,
                         And sorry I could not travel both
                         And be one traveler, long I stood
