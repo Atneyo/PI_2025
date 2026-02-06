@@ -48,8 +48,19 @@ if __name__ == '__main__':
                         And looked down one as far as I could
                         To where it bent in the undergrowth;"""
     
+
+    # Clean the reference text
+    transformation = jiwer.Compose([
+        jiwer.ToLowerCase(),
+        jiwer.RemovePunctuation(),
+        jiwer.RemoveWhiteSpace(replace_by_space=True),
+        jiwer.RemoveMultipleSpaces(),
+        jiwer.Strip(),
+    ])
+    clean_reference = transformation(reference_text)
+    
     models_to_test = ["tiny", "base"]
-    iterations = 10
+    iterations = 3
     results_file = "benchmark_whisper.txt"
 
     with open(results_file, "w", encoding="utf-8") as f:
@@ -66,7 +77,9 @@ if __name__ == '__main__':
                 text, stats = transcribe(audio_file, model_name=model_name, output_dir="benchmark")
                 
                 # Calculate WER
-                current_wer = jiwer.wer(reference_text.lower(), text.lower())
+                # clean the result
+                clean_result = transformation(text)
+                current_wer = jiwer.wer(clean_reference, clean_result)
                 stats["wer"] = current_wer
                 model_stats.append(stats)
                 
