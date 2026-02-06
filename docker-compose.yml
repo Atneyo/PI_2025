@@ -1,18 +1,19 @@
-version: "3.9"
-
 services:
   backend:
     build: 
       context: ./
       dockerfile: ./interface/backend/Dockerfile
     container_name: backend
+    privileged: true             
+    devices:
+      - /dev/hailo0:/dev/hailo0 
+      - /dev/video0:/dev/video0 
     ports:
       - "8000:8000"
     volumes:
-      - /usr/local/bin/joularcore:/usr/local/bin/joularcore:ro # comment this line if you have not joularcore installed
-    # volumes: # le container utilise les fichiers locaux directement (pas besoin de reconstruire l'image quand on fait des modifications)
-    #   - ./interface/backend:/app # dossier_local:dossier_container
-    # problem with import of models
+      - /usr/local/bin/joularcore:/usr/local/bin/joularcore:ro
+      - ./interface/backend:/app/interface/backend
+      - ./interface/backend/outputs:/app/interface/backend/outputs
 
   frontend:
     build: ./interface/frontend
@@ -21,6 +22,8 @@ services:
       - "5173:5173"
     volumes:
       - ./interface/frontend:/app
+      - /app/node_modules 
+      
     environment:
       - VITE_BACKEND_URL=http://localhost:8000
     depends_on:

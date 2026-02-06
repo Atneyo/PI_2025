@@ -1,4 +1,4 @@
-# Fichiers et dossiers inutiles
+# files and folders to ignore
 **/__pycache__/
 *.pyc
 *.log
@@ -14,6 +14,9 @@ interface/frontend/node_modules/
 **/uploads/
 **/env/
 **/venv/
+!interface/backend/venv/src/hailo-apps/scripts/hailo_python_installation.sh
+!interface/backend/venv/src/hailo-apps/scripts/
+!interface/backend/venv/src/hailo-apps/
 screen/
 README_docker.md
 README_merge_request.md

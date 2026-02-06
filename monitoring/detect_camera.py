@@ -2,6 +2,7 @@ import pyudev
 import subprocess
 import shutil
 import datetime
+import re
 
 from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
 
@@ -24,10 +25,19 @@ def list_rpi_cameras():
     cameras = []
     if shutil.which('rpicam-hello'):
         try:
-            result = subprocess.run(['rpicam-hello', '--list_cameras'], capture_output=True, text=True, timeout=3)
-            out = (result.stdout + result.stderr).lower()
-            if result.returncode == 0 or any(k in out for k in ('camera', 'found', 'detected')):
-                cameras.append({"device_node":"/dev/vidoe0", "name":"Raspberry Pi Camera"})
+            result = subprocess.run(
+                ['rpicam-hello', '--list-cameras'],
+                capture_output=True,
+                text=True,
+                timeout=3,
+            )
+            out = result.stdout.strip()
+            if result.returncode == 0 and out:
+                for line in out.splitlines():
+                    if re.match(r'^\s*\d+\s*:', line):
+                        name = line.split(':', 1)[1].strip() or "Raspberry Pi Camera"
+                        cameras.append({"device_node": "/dev/video0", "name": name})
+                        break
                 return cameras
         except (subprocess.TimeoutExpired, FileNotFoundError):
             pass
