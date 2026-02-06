@@ -12,8 +12,13 @@ function VideoPage() {
   const [videoFiles, setVideoFiles] = useState([]);
   const [analysisResult, setAnalysisResult] = useState("");
   const [selectedVideoURL, setSelectedVideoURL] = useState(null);
+  const [finalStats, setFinalStats] = useState({});
   const [loadingBar, setLoadingBar] = useState(-1); // -1 : not loading, null : loading but don't know time, >=0 : loading and know how many time
 
+  const paramsRef = useRef({
+      isOnHat: false,
+      fps: 15
+    });
   const fileInputRef = useRef(null);
 
   const handleFiles = (files) => {
@@ -48,12 +53,16 @@ function VideoPage() {
       return;
     }
 
+    const currentSettings = paramsRef.current;
+    console.log("Paramètres envoyés :", currentSettings);
+
     setLoadingBar(null);
 
     // Print result video
     try {
-      const data = await analyzeVideo(videoFiles); // call backend (see api.jsx)
+      const data = await analyzeVideo(videoFiles, currentSettings.isOnHat, currentSettings.fps); // call backend (see api.jsx)
       setSelectedVideoURL(data["video"]);
+      setFinalStats(data["stats"])
     } catch (err) {
       console.error("Error during analyze :",err);
     } finally {
@@ -158,9 +167,32 @@ function VideoPage() {
 
         {/* Right part */}
         <div className="right-panel">
-          <Parameters />
+          <Parameters settingsRef={paramsRef} />
           <Monitoring/>
-          <Statistics/>
+          {/* <Statistics/> */}
+          {/* Global statistics */}
+          {finalStats && (
+            <div>
+              <h2>Last Analysis</h2>
+              <div className="stats-row">
+                {/* Left column */}
+                <div className="stats-column">
+                  <p>Total Time: {finalStats.total_time_seconds?.toFixed(2)} s</p>
+                  <p>Frames Processed: {finalStats.frames_processed}</p>
+                </div>
+
+                {/* Right column */}
+                <div className="stats-column">
+                  <p>Average Speed: {finalStats.average_fps?.toFixed(1)} FPS</p>
+                  <p>
+                    Detections: {finalStats.total_detections} 
+                    {/* On peut ajouter le pic de détection entre parenthèses ou sur une autre ligne */}
+                    <span style={{fontSize: "0.8em", opacity: 0.8}}> (Max: {finalStats.peak_detections_per_frame})</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
