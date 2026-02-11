@@ -1,4 +1,5 @@
 import datetime
+import glob
 
 try:
     from global_monitoring_functions import save_cur_stats_json, save_to_json, glob_filename
@@ -8,10 +9,15 @@ except:
 def is_hailo_hat_present():
     try:
         from hailort import Device
-        HAILO = True
+        try:
+            with Device() as _:
+                return True
+        except Exception:
+            pass
     except ImportError:
-        HAILO = False
-    return HAILO
+        pass
+
+    return bool(glob.glob("/dev/hailo*"))
 
 
 def get_cur_hailo_presence():

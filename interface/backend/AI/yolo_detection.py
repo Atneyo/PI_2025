@@ -1,10 +1,25 @@
-from pathlib import Path
+import ctypes
 import os
+import sys
+from pathlib import Path
+
+try:
+    ctypes.CDLL("libgsthailometa.so")
+    print("SUCCESS: libgsthailometa.so loaded successfully via ctypes.")
+except OSError:
+    print("WARNING: Could not load libgsthailometa.so via ctypes. Detections might fail.")
+    try:
+        ctypes.CDLL("/usr/lib/aarch64-linux-gnu/libgsthailometa.so")
+        print("SUCCESS: libgsthailometa.so loaded via absolute path.")
+    except OSError:
+        pass
+
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 import hailo
 
+# Imports locaux
 from interface.backend.AI.cropping_yolo import (
     extract_frame_from_pad,
     save_detection_crops,
@@ -19,17 +34,57 @@ from interface.backend.AI.gstreamer_yolo import (
 )
 from interface.backend.AI.stats_yolo import UserCallback, write_summary_json
 
+_ROI_HELPER_WARNING_EMITTED = False
+
+def _first_roi(candidate):
+    if candidate is None:
+        return None
+    if isinstance(candidate, (list, tuple)):
+        return candidate[0] if candidate else None
+    return candidate
+
+def get_roi_from_buffer(buffer):
+    """
+    Retrieves hailo ROI
+    """
+    if hasattr(hailo, "get_roi_from_buffer"):
+        return hailo.get_roi_from_buffer(buffer)
+    
+    if hasattr(hailo, "get_hailo_roi_instances"):
+        return _first_roi(hailo.get_hailo_roi_instances(buffer))
+
+    try:
+        import gsthailo
+        return gsthailo.get_roi_from_buffer(buffer)
+    except ImportError:
+        pass
+
+    try:
+        from hailo_apps.hailo_app_python.core.common import buffer_utils
+        for name in ("get_roi_from_buffer", "get_hailo_roi_instances"):
+            func = getattr(buffer_utils, name, None)
+            if callable(func):
+                return _first_roi(func(buffer))
+    except (ImportError, AttributeError):
+        pass
+
+    global _ROI_HELPER_WARNING_EMITTED
+    if not _ROI_HELPER_WARNING_EMITTED:
+        print("CRITICAL WARNING: Impossible d'extraire les ROI. Vérifiez libgsthailometa.so.")
+        _ROI_HELPER_WARNING_EMITTED = True
+    return None
+
 MODULE_ROOT = Path(__file__).resolve().parent
 ENV_FILE_PATH = MODULE_ROOT / ".env"
 HEF_FILE = MODULE_ROOT / "yolov11n.hef"
 RECORDINGS_DIR = MODULE_ROOT / "recordings"
 DEFAULT_VIDEO = MODULE_ROOT / "resources" / "videoplayback.mp4"
 
-# === Simple knobs to tweak ===
-USE_WEBCAM = True  # False to run on DEFAULT_VIDEO
+# configuration
+USE_WEBCAM = True
 RECORD_FILENAME = "detections_latest.mkv"
 FRAME_RATE = 15
-ARCH = None  # e.g. "hailo8"
+ARCH = None
 SHOW_FPS = False
 USE_FRAME_QUEUE = False
 SYNC_WITH_SOURCE = True
@@ -46,7 +101,6 @@ STATS_INTERVAL = 60
 LOG_INTERVAL = 300
 TRACK_STALE_FRAMES = 30
 
-
 def app_callback(pad, info, user_data):
     buf = info.get_buffer()
     if buf is None:
@@ -58,23 +112,26 @@ def app_callback(pad, info, user_data):
     frame = None
     width = None
     height = None
+    
+    # image extraction
     if user_data.crop_dir is not None:
         frame, width, height = extract_frame_from_pad(pad, buf)
 
-    roi = hailo.get_roi_from_buffer(buf)
-    detections = roi.get_objects_typed(hailo.HAILO_DETECTION)
+    # detection extraction
+    roi = get_roi_from_buffer(buf)
+    detections = []
+    if roi:
+        detections = roi.get_objects_typed(hailo.HAILO_DETECTION)
+    
     detection_count = len(detections)
 
     if user_data.should_log_frame(frame_id):
         summary = ", ".join(d.get_label() for d in detections[:3]) if detections else "none"
         print(f"[Frame {frame_id}] detections={detection_count} sample={summary}")
 
-    if (
-        frame is not None
-        and user_data.crop_dir is not None
-        and width is not None
-        and height is not None
-    ):
+    # crop saving
+    if (frame is not None and user_data.crop_dir is not None 
+        and width is not None and height is not None):
         save_detection_crops(
             frame,
             width,
@@ -90,15 +147,15 @@ def app_callback(pad, info, user_data):
 
     return Gst.PadProbeReturn.OK
 
-
 def load_detection_environment(env_file: str | Path | None = None) -> Path:
-    """Set the env file that Hailo expects and print its contents for visibility."""
     env_path = Path(env_file) if env_file is not None else ENV_FILE_PATH
     os.environ["HAILO_ENV_FILE"] = str(env_path)
     print("== Using ENV ==")
-    print(env_path.read_text())
+    try:
+        print(env_path.read_text())
+    except FileNotFoundError:
+        print(f"Env file not found at {env_path}, skipping print.")
     return env_path
-
 
 def yolo_detection(
     live_input: bool = True,
@@ -121,7 +178,6 @@ def yolo_detection(
     arch: str | None = None,
     hef_path: str | Path | None = None,
 ) -> Path:
-    """Launch the YOLO detection pipeline with the requested source."""
     if not live_input and video_path is None:
         raise ValueError("video_path must be provided when live_input is False.")
 
@@ -186,7 +242,6 @@ def yolo_detection(
             user_data.print_summary()
 
     return finalized_recording or app.record_output, user_data
-
 
 if __name__ == "__main__":
     yolo_detection()

@@ -1,0 +1,9 @@
+numpy==2.2.4
+opencv-python==4.12.0.88
+pillow==11.1.0
+tqdm==4.67.1
+PyYAML==6.0.2
+requests==2.32.3
+
+hailo-tappas-core-python-binding==5.1.0
+hailo-apps @ https://github.com/hailo-ai/hailo-apps/archive/refs/tags/v25.10.0.tar.gz
