@@ -41,6 +41,7 @@ The objectives of this project are:
 │   │   └── index.jsx               # Entry point
 |   |
 │   └── backend/                    # Backend connecting the interface with the models
+│       ├── AI/                     # YOLO model
 |       └── main.py                 # FastAPI app
 │
 ├── models/                         # AI Models (CV and STT)
@@ -65,19 +66,50 @@ The objectives of this project are:
 ## Launch
 (specify how to launch each component / provide a link to the corresponding README)
 
-To lauch the application:
+### Docker
+**To lauch the application:**
 ```
-docker-compose up --build
+docker compose up --build
 # without --build Docker uses images already built
 ```
 
-The app is available at:
+**The app is available at:**
 ```
 http://localhost:5173/
 ```
 
-To clean up:
+**To clean up:**
 ```
-docker-compose down -v
+docker compose down -v
 docker rmi backend-image:latest frontend-image:latest
 ```
+
+### Bash
+
+**To lauch the application:**
+Backend:
+```
+pip install -r interface/backend/requirements_backend.txt   //backend
+pip install -r models/speech_to_text/requirements_stt.txt   //stt
+pip install -r monitoring/requirements.txt                  // monitoring
+pip install -r interface/backend/requirements_cv.txt           // YOLO with HAT
+pip install -r interface/backend/requirements_yolo_without_hat.txt   // YOLO without HAT
+uvicorn interface.backend.main:app --reload
+```
+
+Frontend:
+```
+cd interface/frontend
+npm install
+npm run dev
+```
+If you have access issues try deleting `node_modules` repertory before `npm install` command.
+
+**The app is available at:**
+```
+http://localhost:5173/
+```
+
+## TODO
+
+There were some problems with the last merge (between Docker and main branches). All problems have been fixed on the Raspberry Pi 5 with HAT but aren't pushed on the git repository.
